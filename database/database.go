@@ -3,14 +3,16 @@ package database
 import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"twitter-app/config"
 )
 
 var d *gorm.DB
 
 func Init() {
 	var err error
-	dsn := "host=localhost user=suwayouta dbname=twitter sslmode=disable"
-	d, err = gorm.Open(postgres.Open(dsn))
+	c := config.GetConfig()
+	d, err = gorm.Open(postgres.Open(c.GetString("db")))
 	if err != nil {
 		panic(err)
 	}
