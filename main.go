@@ -34,10 +34,16 @@ func Index(c echo.Context) error {
 }
 
 func Create(c echo.Context) error {
-	u := new(models.User)
-	if err := c.Bind(u); err != nil {
+	var id int
+	if users == nil {
+		id = 1
+	} else {
+		id = users[len(users) - 1].Id + 1
+	}
+	u := models.User{Id: id}
+	if err := c.Bind(&u); err != nil {
 		return err
 	}
-	users = append(users, *u)
-	return c.JSON(http.StatusCreated, u)
+	users = append(users, u)
+	return c.JSON(http.StatusCreated, &u)
 }
