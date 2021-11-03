@@ -22,7 +22,7 @@ func main() {
 	e.POST("/users", controllers.Create)
 	// e.GET("/users/:id/edit", controllers.Edit)
 	e.PUT("/users/:id", controllers.Update)
-	// e.DELETE("/users/:id", controllers.Destroy)
+	e.DELETE("/users/:id", controllers.Destroy)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
