@@ -1,2 +1,2 @@
 db:
-  url: suwayouta:@tcp(localhost:1323)/twitter?sslmode=disable
+  url: postgres://suwayouta:@localhost/twitter?sslmode=disable
