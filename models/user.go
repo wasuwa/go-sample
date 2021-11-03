@@ -1,6 +1,6 @@
 package models
 
-import "strconv"
+import "twitter-app/database"
 
 type User struct {
 	Id       int        `json:"id"`
@@ -9,9 +9,9 @@ type User struct {
 	Password string     `json:"password"`
 }
 
-var Users []User
-
-func (u *User) Find(id string) *User {
-	i, _ := strconv.Atoi(id)
-	return &Users[i-1]
+func (u *User) All() []User {
+	var users []User
+	d := database.GetDB()
+	d.Find(&users)
+	return users
 }

@@ -2,17 +2,14 @@ package controllers
 
 import (
 	"net/http"
-	"twitter-app/database"
 	"twitter-app/models"
 
 	"github.com/labstack/echo/v4"
 )
 
 func Index(c echo.Context) error {
-	var users []models.User
-	database.Init()
-	d := database.GetDB()
-	d.Find(&users)
+	var u models.User
+	users := u.All()
 	return c.JSON(http.StatusOK, users)
 }
 

@@ -8,6 +8,7 @@ import (
 
 func main() {
 	config.Init("development")
-	server.Init()
+	database.Init()
 	defer database.Close()
+	server.Init()
 }
