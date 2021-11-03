@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 	"twitter-app/models"
 
 	"github.com/labstack/echo/v4"
@@ -17,7 +18,7 @@ func main() {
 
 	// route
 	e.GET("/users", Index)
-	// e.GET("/users/:id", Show)
+	e.GET("/users/:id", Show)
 	// e.GET("/users/new", New)
 	e.POST("/users", Create)
 	// e.GET("/users/:id/edit", Edit)
@@ -46,4 +47,10 @@ func Create(c echo.Context) error {
 	}
 	users = append(users, u)
 	return c.JSON(http.StatusCreated, &u)
+}
+
+func Show(c echo.Context) error {
+	i, _ := strconv.Atoi(c.Param("id"))
+	u := users[i - 1]
+	return c.JSON(http.StatusOK, &u)
 }
