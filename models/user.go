@@ -15,3 +15,8 @@ func (u *User) All() []User {
 	d.Find(&users)
 	return users
 }
+
+func (u *User) Create() {
+	d := database.GetDB()
+	d.Create(u)
+}

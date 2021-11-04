@@ -7,26 +7,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Index(c echo.Context) error {
+func UserIndex(c echo.Context) error {
 	var u models.User
 	users := u.All()
 	return c.JSON(http.StatusOK, users)
 }
 
-// func Create(c echo.Context) error {
-// 	var id int
-// 	if models.Users == nil {
-// 		id = 1
-// 	} else {
-// 		id = models.Users[len(models.Users)-1].Id + 1
-// 	}
-// 	u := models.User{Id: id}
-// 	if err := c.Bind(&u); err != nil {
-// 		return err
-// 	}
-// 	models.Users = append(models.Users, u)
-// 	return c.JSON(http.StatusCreated, u)
-// }
+func UserCreate(c echo.Context) error {
+	u := new(models.User)
+	if err := c.Bind(u); err != nil {
+		return err
+	}
+	u.Create()
+	return c.JSON(http.StatusCreated, u)
+}
 
 // func Show(c echo.Context) error {
 // 	var user models.User
