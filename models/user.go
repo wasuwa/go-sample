@@ -1,6 +1,9 @@
 package models
 
-import "twitter-app/database"
+import (
+	"strconv"
+	"twitter-app/database"
+)
 
 type User struct {
 	Id       int        `json:"id"`
@@ -19,4 +22,18 @@ func (u *User) All() []User {
 func (u *User) Create() {
 	d := database.GetDB()
 	d.Create(u)
+}
+
+func (u *User) Find(id int) {
+	u.Id = id
+	d := database.GetDB()
+	d.First(u)
+}
+
+func ConvertToInt(s string) (int, error) {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return i, err
+	}
+	return i, err
 }

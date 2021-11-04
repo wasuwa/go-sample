@@ -15,7 +15,7 @@ func Router() (e *echo.Echo) {
 	e.Use(middleware.Recover())
 
 	e.GET("/users", controllers.UserIndex)
-	// e.GET("/users/:id", controllers.Show)
+	e.GET("/users/:id", controllers.UserShow)
 	// e.GET("/users/new", controllers.New)
 	e.POST("/users", controllers.UserCreate)
 	// e.GET("/users/:id/edit", controllers.Edit)
