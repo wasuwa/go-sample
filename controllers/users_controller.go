@@ -25,8 +25,14 @@ func CreateUser(c echo.Context) error {
 
 func ShowUser(c echo.Context) error {
 	var u models.User
-	i, _ := strconv.Atoi(c.Param("id"))
-	u.Find(i)
+	i, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	err = u.Find(i)
+	if err != nil {
+		return err
+	}
 	return c.JSON(http.StatusOK, u)
 }
 

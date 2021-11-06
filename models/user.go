@@ -23,10 +23,11 @@ func (u *User) Create() {
 	d.Create(u)
 }
 
-func (u *User) Find(id int) {
+func (u *User) Find(id int) error {
 	u.Id = id
 	d := database.GetDB()
-	d.First(u)
+	d = d.Take(u)
+	return d.Error
 }
 
 func (u *User) Update(id int) {
