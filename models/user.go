@@ -30,6 +30,12 @@ func (u *User) Find(id int) {
 	d.First(u)
 }
 
+func (u *User) Update(id int) {
+	u.Id = id
+	d := database.GetDB()
+	d.Updates(u)
+}
+
 func ConvertToInt(s string) (int, error) {
 	i, err := strconv.Atoi(s)
 	if err != nil {

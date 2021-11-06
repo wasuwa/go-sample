@@ -32,13 +32,18 @@ func UserShow(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
-// func UserShow(c echo.Context) error {
-// 	var user models.User
-// 	user.Id = 1
-// 	d := database.GetDB()
-// 	u := d.First(&user)
-// 	return c.JSON(http.StatusOK, u)
-// }
+func UserUpdate(c echo.Context) error {
+	var u models.User
+	i, err := models.ConvertToInt(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	if err := c.Bind(u); err != nil {
+		return err
+	}
+	u.Update(i)
+	return c.JSON(http.StatusNoContent, nil)
+}
 
 // func Update(c echo.Context) error {
 // 	var user models.User
