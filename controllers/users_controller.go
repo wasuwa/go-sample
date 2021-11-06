@@ -7,13 +7,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func UserIndex(c echo.Context) error {
+func IndexUser(c echo.Context) error {
 	var u models.User
 	users := u.All()
 	return c.JSON(http.StatusOK, users)
 }
 
-func UserCreate(c echo.Context) error {
+func CreateUser(c echo.Context) error {
 	u := new(models.User)
 	if err := c.Bind(u); err != nil {
 		return err
@@ -22,7 +22,7 @@ func UserCreate(c echo.Context) error {
 	return c.JSON(http.StatusCreated, u)
 }
 
-func UserShow(c echo.Context) error {
+func ShowUser(c echo.Context) error {
 	var u models.User
 	i, err := models.ConvertToInt(c.Param("id"))
 	if err != nil {
@@ -32,7 +32,7 @@ func UserShow(c echo.Context) error {
 	return c.JSON(http.StatusOK, u)
 }
 
-func UserUpdate(c echo.Context) error {
+func UpdateUser(c echo.Context) error {
 	var u models.User
 	i, err := models.ConvertToInt(c.Param("id"))
 	if err != nil {

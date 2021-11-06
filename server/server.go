@@ -14,12 +14,12 @@ func Router() (e *echo.Echo) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/users", controllers.UserIndex)
-	e.GET("/users/:id", controllers.UserShow)
+	e.GET("/users", controllers.IndexUser)
+	e.GET("/users/:id", controllers.ShowUser)
 	// e.GET("/users/new", controllers.New)
-	e.POST("/users", controllers.UserCreate)
+	e.POST("/users", controllers.CreateUser)
 	// e.GET("/users/:id/edit", controllers.Edit)
-	e.PUT("/users/:id", controllers.UserUpdate)
+	e.PUT("/users/:id", controllers.UpdateUser)
 	// e.DELETE("/users/:id", controllers.Destroy)
 
 	return
