@@ -44,9 +44,12 @@ func ShowUser(c echo.Context) error {
 }
 
 func UpdateUser(c echo.Context) error {
-	var u models.User
-	i, _ := strconv.Atoi(c.Param("id"))
-	err := c.Bind(u)
+	u := new(models.User)
+	i, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	err = c.Bind(u)
 	if err != nil {
 		return err
 	}
