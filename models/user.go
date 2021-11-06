@@ -1,7 +1,6 @@
 package models
 
 import (
-	"strconv"
 	"twitter-app/database"
 )
 
@@ -34,12 +33,4 @@ func (u *User) Update(id int) {
 	u.Id = id
 	d := database.GetDB()
 	d.Updates(u)
-}
-
-func ConvertToInt(s string) (int, error) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		return i, err
-	}
-	return i, err
 }

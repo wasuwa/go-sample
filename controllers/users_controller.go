@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"twitter-app/models"
 
 	"github.com/labstack/echo/v4"
@@ -24,20 +25,14 @@ func CreateUser(c echo.Context) error {
 
 func ShowUser(c echo.Context) error {
 	var u models.User
-	i, err := models.ConvertToInt(c.Param("id"))
-	if err != nil {
-		return err
-	}
+	i, _ := strconv.Atoi(c.Param("id"))
 	u.Find(i)
 	return c.JSON(http.StatusOK, u)
 }
 
 func UpdateUser(c echo.Context) error {
 	var u models.User
-	i, err := models.ConvertToInt(c.Param("id"))
-	if err != nil {
-		return err
-	}
+	i, _ := strconv.Atoi(c.Param("id"))
 	if err := c.Bind(u); err != nil {
 		return err
 	}
