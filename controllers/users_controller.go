@@ -46,10 +46,14 @@ func ShowUser(c echo.Context) error {
 func UpdateUser(c echo.Context) error {
 	var u models.User
 	i, _ := strconv.Atoi(c.Param("id"))
-	if err := c.Bind(u); err != nil {
+	err := c.Bind(u)
+	if err != nil {
 		return err
 	}
-	u.Update(i)
+	err = u.Update(i)
+	if err != nil {
+		return err
+	}
 	return c.JSON(http.StatusNoContent, nil)
 }
 

@@ -31,8 +31,9 @@ func (u *User) Find(id int) error {
 	return d.Error
 }
 
-func (u *User) Update(id int) {
+func (u *User) Update(id int) error {
 	u.Id = id
 	d := database.GetDB()
-	d.Updates(u)
+	d = d.Updates(u)
+	return d.Error
 }
