@@ -18,9 +18,10 @@ func (u *User) All() ([]User, error) {
 	return users, d.Error
 }
 
-func (u *User) Create() {
+func (u *User) Create() error {
 	d := database.GetDB()
-	d.Create(u)
+	d = d.Create(u)
+	return d.Error
 }
 
 func (u *User) Find(id int) error {

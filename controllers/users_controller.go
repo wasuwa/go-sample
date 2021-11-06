@@ -19,10 +19,14 @@ func IndexUser(c echo.Context) error {
 
 func CreateUser(c echo.Context) error {
 	u := new(models.User)
-	if err := c.Bind(u); err != nil {
+	err := c.Bind(u)
+	if err != nil {
 		return err
 	}
-	u.Create()
+	err = u.Create()
+	if err != nil {
+		return err
+	}
 	return c.JSON(http.StatusCreated, u)
 }
 
