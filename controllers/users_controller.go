@@ -10,7 +10,10 @@ import (
 
 func IndexUser(c echo.Context) error {
 	var u models.User
-	users := u.All()
+	users, err := u.All()
+	if err != nil {
+		return err
+	}
 	return c.JSON(http.StatusOK, users)
 }
 

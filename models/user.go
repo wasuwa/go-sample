@@ -11,11 +11,11 @@ type User struct {
 	Password string     `json:"password"`
 }
 
-func (u *User) All() []User {
+func (u *User) All() ([]User, error) {
 	var users []User
 	d := database.GetDB()
-	d.Find(&users)
-	return users
+	d = d.Find(&users)
+	return users, d.Error
 }
 
 func (u *User) Create() {
