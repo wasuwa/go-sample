@@ -12,8 +12,7 @@ func IndexUser(c echo.Context) error {
 	var u models.User
 	users, err := u.All()
 	if err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusOK, users)
 }
@@ -39,8 +38,7 @@ func ShowUser(c echo.Context) error {
 	}
 	err = u.Find(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusOK, u)
 }
@@ -57,8 +55,7 @@ func UpdateUser(c echo.Context) error {
 	}
 	err = u.Update(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusNoContent, nil)
 }
@@ -71,8 +68,7 @@ func DestroyUser(c echo.Context) error {
 	}
 	err = u.Destroy(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, err.Error())
-		return err
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 	return c.JSON(http.StatusNoContent, nil)
 }

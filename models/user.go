@@ -3,14 +3,22 @@ package models
 import (
 	"errors"
 	"twitter-app/database"
+
+	"github.com/go-playground/validator/v10"
 )
 
-type User struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
+type (
+	User struct {
+		Id       int    `json:"id"`
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	CustomValidator struct {
+		validator *validator.Validate
+	}
+)
 
 func (u *User) All() ([]User, error) {
 	var users []User
