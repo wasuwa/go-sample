@@ -12,6 +12,7 @@ func IndexUser(c echo.Context) error {
 	var u models.User
 	users, err := u.All()
 	if err != nil {
+		c.JSON(http.StatusNotFound, err.Error())
 		return err
 	}
 	return c.JSON(http.StatusOK, users)
