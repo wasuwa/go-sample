@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"regexp"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
@@ -19,5 +21,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 }
 
 func isEmailTypeValid(fl validator.FieldLevel) bool {
-	return false
+	str := `^[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z$`
+	r := regexp.MustCompile(str)
+	return r.MatchString(fl.Field().String())
 }
