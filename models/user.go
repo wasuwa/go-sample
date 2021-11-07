@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 	"twitter-app/database"
+	"twitter-app/middleware"
 )
 
 type User struct {
@@ -24,6 +25,8 @@ func (u *User) All() ([]User, error) {
 
 func (u *User) Create() error {
 	d := database.GetDB()
+	u.CreatedAt = middleware.TimeNow()
+	u.UpdatedAt = middleware.TimeNow()
 	d = d.Create(u)
 	return d.Error
 }
@@ -36,7 +39,8 @@ func (u *User) Find(id int) error {
 
 func (u *User) Update(id int) error {
 	d := database.GetDB()
-	d = d.Debug().Where("id = ?", id).Updates(u)
+	u.UpdatedAt = middleware.TimeNow()
+	d = d.Where("id = ?", id).Updates(u)
 	if d.RowsAffected == 0 {
 		err := errors.New("record not found")
 		return err
