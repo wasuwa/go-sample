@@ -1,6 +1,9 @@
 package models
 
-import "twitter-app/database"
+import (
+	"errors"
+	"twitter-app/database"
+)
 
 type User struct {
 	Id       int    `json:"id"`
@@ -29,14 +32,21 @@ func (u *User) Find(id int) error {
 }
 
 func (u *User) Update(id int) error {
-	u.Id = id
 	d := database.GetDB()
-	d = d.Updates(u)
+	d = d.Debug().Where("id = ?", id).Updates(u)
+	if d.RowsAffected == 0 {
+		err := errors.New("record not found")
+		return err
+	}
 	return d.Error
 }
 
 func (u *User) Destroy(id int) error {
 	d := database.GetDB()
 	d = d.Delete(u, id)
+	if d.RowsAffected == 0 {
+		err := errors.New("record not found")
+		return err
+	}
 	return d.Error
 }
