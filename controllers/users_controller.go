@@ -38,8 +38,7 @@ func ShowUser(c echo.Context) error {
 	}
 	err = u.Find(id)
 	if err != nil {
-		// error が返ってきた時のJSONを作った方が良い気がする
-		c.JSON(http.StatusNotFound, nil)
+		c.JSON(http.StatusNotFound, err.Error())
 		return err
 	}
 	return c.JSON(http.StatusOK, u)
