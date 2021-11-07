@@ -23,6 +23,10 @@ func CreateUser(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+	err = c.Validate(u)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 	err = u.Create()
 	if err != nil {
 		return err
