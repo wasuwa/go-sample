@@ -20,7 +20,7 @@ func Router() (e *echo.Echo) {
 	e.POST("/users", controllers.CreateUser)
 	// e.GET("/users/:id/edit", controllers.Edit)
 	e.PATCH("/users/:id", controllers.UpdateUser)
-	// e.DELETE("/users/:id", controllers.Destroy)
+	e.DELETE("/users/:id", controllers.DestroyUser)
 
 	return
 }

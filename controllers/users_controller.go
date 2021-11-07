@@ -60,19 +60,15 @@ func UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusNoContent, nil)
 }
 
-// func Update(c echo.Context) error {
-// 	var user models.User
-// 	i := c.Param("id")
-// 	u := user.Find(i)
-// 	if err := c.Bind(u); err != nil {
-// 		return err
-// 	}
-// 	return c.JSON(http.StatusCreated, u)
-// }
-
-// func Destroy(c echo.Context) error {
-// 	i := c.Param("id")
-// 	n, _ := strconv.Atoi(i)
-// 	models.Users = append(models.Users[:n-1], models.Users[n])
-// 	return c.JSON(http.StatusNoContent, nil)
-// }
+func DestroyUser(c echo.Context) error {
+	var u models.User
+	i, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return err
+	}
+	err = u.Destroy(i)
+	if err != nil {
+		return err
+	}
+	return c.JSON(http.StatusNoContent, nil)
+}

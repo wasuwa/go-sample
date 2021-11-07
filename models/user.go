@@ -5,10 +5,10 @@ import (
 )
 
 type User struct {
-	Id       int        `json:"id"`
-	Name     string     `json:"name"`
-	Email    string     `json:"email"`
-	Password string     `json:"password"`
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (u *User) All() ([]User, error) {
@@ -35,5 +35,11 @@ func (u *User) Update(id int) error {
 	u.Id = id
 	d := database.GetDB()
 	d = d.Updates(u)
+	return d.Error
+}
+
+func (u *User) Destroy(id int) error {
+	d := database.GetDB()
+	d = d.Delete(u, id)
 	return d.Error
 }
