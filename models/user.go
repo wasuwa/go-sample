@@ -10,7 +10,7 @@ import (
 type User struct {
 	ID        uint      `json:"id" gorm:"primarykey"`
 	Name      string    `json:"name" validate:"required,max=15"`
-	Email     string    `json:"email" validate:"required,max=256,emailType"`
+	Email     string    `json:"email" gorm:"unique" validate:"required,max=256,emailType"`
 	Password  string    `json:"password" validate:"required,min=6"`
 	CreatedAt time.Time `json:"created-at"`
 	UpdatedAt time.Time `json:"updated-at"`
