@@ -57,6 +57,7 @@ func UpdateUser(c echo.Context) error {
 	}
 	err = u.Update(id)
 	if err != nil {
+		c.JSON(http.StatusNotFound, err.Error())
 		return err
 	}
 	return c.JSON(http.StatusNoContent, nil)
@@ -70,6 +71,7 @@ func DestroyUser(c echo.Context) error {
 	}
 	err = u.Destroy(id)
 	if err != nil {
+		c.JSON(http.StatusNotFound, err.Error())
 		return err
 	}
 	return c.JSON(http.StatusNoContent, nil)
