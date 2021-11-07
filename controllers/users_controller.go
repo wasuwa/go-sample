@@ -32,12 +32,14 @@ func CreateUser(c echo.Context) error {
 
 func ShowUser(c echo.Context) error {
 	var u models.User
-	i, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
-	err = u.Find(i)
+	err = u.Find(id)
 	if err != nil {
+		// error が返ってきた時のJSONを作った方が良い気がする
+		c.JSON(http.StatusNotFound, nil)
 		return err
 	}
 	return c.JSON(http.StatusOK, u)
@@ -45,7 +47,7 @@ func ShowUser(c echo.Context) error {
 
 func UpdateUser(c echo.Context) error {
 	u := new(models.User)
-	i, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
@@ -53,7 +55,7 @@ func UpdateUser(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	err = u.Update(i)
+	err = u.Update(id)
 	if err != nil {
 		return err
 	}
@@ -62,11 +64,11 @@ func UpdateUser(c echo.Context) error {
 
 func DestroyUser(c echo.Context) error {
 	var u models.User
-	i, err := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
-	err = u.Destroy(i)
+	err = u.Destroy(id)
 	if err != nil {
 		return err
 	}
