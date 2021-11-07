@@ -1,8 +1,6 @@
 package models
 
-import (
-	"twitter-app/database"
-)
+import "twitter-app/database"
 
 type User struct {
 	Id       int    `json:"id"`
@@ -25,9 +23,8 @@ func (u *User) Create() error {
 }
 
 func (u *User) Find(id int) error {
-	u.Id = id
 	d := database.GetDB()
-	d = d.Take(u)
+	d = d.Where("id = ?", id).Take(u)
 	return d.Error
 }
 
