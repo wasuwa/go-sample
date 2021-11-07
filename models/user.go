@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	Id       int    `json:"id"`
-	Name     string `json:"name" validate:"required,max=15"`
+	Name     string `json:"name" validate:"required,max=15,emailType"`
 	Email    string `json:"email" validate:"required,max=256"`
 	Password string `json:"password" validate:"required,min=6"`
 }

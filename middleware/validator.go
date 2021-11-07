@@ -14,5 +14,10 @@ func NewValidator() echo.Validator {
 }
 
 func (cv *CustomValidator) Validate(i interface{}) error {
+	cv.Validator.RegisterValidation("emailType", isEmailTypeValid)
 	return cv.Validator.Struct(i)
+}
+
+func isEmailTypeValid(fl validator.FieldLevel) bool {
+	return false
 }
