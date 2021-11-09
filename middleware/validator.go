@@ -17,7 +17,6 @@ func NewValidator() echo.Validator {
 
 func (cv *CustomValidator) Validate(i interface{}) error {
 	cv.Validator.RegisterValidation("emailType", isEmailTypeValid)
-	cv.Validator.RegisterValidation("idSend", isIdSend)
 	return cv.Validator.Struct(i)
 }
 
@@ -25,12 +24,4 @@ func isEmailTypeValid(fl validator.FieldLevel) bool {
 	str := `^[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z$`
 	r := regexp.MustCompile(str)
 	return r.MatchString(fl.Field().String())
-}
-
-func isIdSend(fl validator.FieldLevel) bool {
-	if i := fl.Field().Uint(); i == 0 {
-		return true
-	} else {
-		return false
-	}
 }

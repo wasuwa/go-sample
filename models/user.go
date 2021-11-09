@@ -7,12 +7,12 @@ import (
 )
 
 type User struct {
-	ID        uint      `json:"id" gorm:"primarykey,autoincrement" validate:"idSend"`
+	ID        uint      `gorm:"primarykey,autoincrement"`
 	Name      string    `json:"name" validate:"required,max=15"`
 	Email     string    `json:"email" gorm:"unique" validate:"required,max=256,emailType"`
 	Password  string    `json:"password" validate:"required,min=6"`
-	CreatedAt time.Time `json:"created-at"`
-	UpdatedAt time.Time `json:"updated-at"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (u *User) All() ([]User, error) {
