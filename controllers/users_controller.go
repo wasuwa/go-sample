@@ -22,7 +22,7 @@ func CreateUser(c echo.Context) error {
 	r := new(models.ReceiveUser)
 	err := c.Bind(r)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	err = c.Validate(r)
 	if err != nil {
@@ -31,7 +31,7 @@ func CreateUser(c echo.Context) error {
 	r.BindUser(u)
 	err = u.Create()
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusCreated, u)
 }
@@ -40,7 +40,7 @@ func ShowUser(c echo.Context) error {
 	var u models.User
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	err = u.Find(id)
 	if err != nil {
@@ -54,11 +54,11 @@ func UpdateUser(c echo.Context) error {
 	r := new(models.ReceiveUser)
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	err = c.Bind(r)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	err = c.Validate(r)
 	if err != nil {
@@ -76,7 +76,7 @@ func DestroyUser(c echo.Context) error {
 	var u models.User
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	err = u.Destroy(id)
 	if err != nil {
