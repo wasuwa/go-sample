@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 	"twitter-app/database"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -29,7 +31,12 @@ func (u *User) All() ([]User, error) {
 }
 
 func (u *User) Create() error {
+	var err error
 	d := database.GetDB()
+	u.Password, err = u.hashPassword()
+	if err != nil {
+		return err
+	}
 	d = d.Create(u)
 	return d.Error
 }
@@ -41,10 +48,15 @@ func (u *User) Find(id int) error {
 }
 
 func (u *User) Update(id int) error {
+	var err error
 	d := database.GetDB()
+	u.Password, err = u.hashPassword()
+	if err != nil {
+		return err
+	}
 	d = d.Where("id = ?", id).Updates(u)
 	if d.RowsAffected == 0 {
-		err := errors.New("record not found")
+		err = errors.New("record not found")
 		return err
 	}
 	return d.Error
@@ -61,7 +73,12 @@ func (u *User) Destroy(id int) error {
 }
 
 func (r *ReceiveUser) BindUser(u *User) {
-	u.Name = r.Name
-	u.Email = r.Email
+	u.Name 		 = r.Name
+	u.Email 	 = r.Email
 	u.Password = r.Password
+}
+
+func (u *User) hashPassword() (string, error) {
+	h, err := bcrypt.GenerateFromPassword([]byte(u.Password), 12)
+	return string(h), err
 }
