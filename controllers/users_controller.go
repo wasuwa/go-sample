@@ -19,14 +19,16 @@ func IndexUser(c echo.Context) error {
 
 func CreateUser(c echo.Context) error {
 	u := new(models.User)
-	err := c.Bind(u)
+	r := new(models.ReceiveUser)
+	err := c.Bind(r)
 	if err != nil {
 		return err
 	}
-	err = c.Validate(u)
+	err = c.Validate(r)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+	r.BindUser(u)
 	err = u.Create()
 	if err != nil {
 		return err

@@ -7,12 +7,18 @@ import (
 )
 
 type User struct {
-	ID        uint      `gorm:"primarykey,autoincrement"`
-	Name      string    `json:"name" validate:"required,max=15"`
-	Email     string    `json:"email" gorm:"unique" validate:"required,max=256,emailType"`
-	Password  string    `json:"password" validate:"required,min=6"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint      `json:"id" gorm:"primarykey,autoincrement"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email" gorm:"unique"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"created-at"`
+	UpdatedAt time.Time `json:"updated-at"`
+}
+
+type ReceiveUser struct {
+	Name     string `json:"name"     validate:"required,max=15"`
+	Email    string `json:"email"    validate:"required,max=256,emailType"`
+	Password string `json:"password" validate:"required,min=6"`
 }
 
 func (u *User) All() ([]User, error) {
@@ -52,4 +58,10 @@ func (u *User) Destroy(id int) error {
 		return err
 	}
 	return d.Error
+}
+
+func (r *ReceiveUser) BindUser(u *User) {
+	u.Name = r.Name
+	u.Email = r.Email
+	u.Password = r.Password
 }
