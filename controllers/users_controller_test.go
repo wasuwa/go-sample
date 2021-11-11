@@ -16,8 +16,8 @@ import (
 var userJSON = `{"name":"mokou","email:"mokou@mokou.com","mokomoko"}`
 
 func TestIndexUser(t *testing.T) {
-	config.Init("../config/environments/", "development")
-	database.Init("うんち")
+	config.Init("../config/environments/", "test")
+	database.Init()
 	e := server.Router()
 
 	req := httptest.NewRequest(http.MethodGet, "/users", nil)
