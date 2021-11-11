@@ -17,7 +17,7 @@ var userJSON = `{"name":"mokou","email:"mokou@mokou.com","mokomoko"}`
 
 func TestIndexUser(t *testing.T) {
 	config.Init("../config/environments/", "development")
-	database.Init()
+	database.Init("うんち")
 	e := server.Router()
 
 	req := httptest.NewRequest(http.MethodGet, "/users", nil)
@@ -26,5 +26,7 @@ func TestIndexUser(t *testing.T) {
 	c := e.NewContext(req, rec)
 	if assert.NoError(t, controllers.IndexUser(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
+		// mock DB を用意する必要がある
+		// println(rec.Body.String())
 	}
 }

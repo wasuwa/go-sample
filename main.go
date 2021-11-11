@@ -8,7 +8,7 @@ import (
 
 func main() {
 	config.Init("config/environments/", "development")
-	database.Init()
+	database.Init("db.url")
 	defer database.Close()
 	server.Init()
 }

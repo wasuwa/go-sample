@@ -9,10 +9,10 @@ import (
 
 var d *gorm.DB
 
-func Init() {
+func Init(url string) {
 	var err error
 	c := config.Config()
-	d, err = gorm.Open(postgres.Open(c.GetString("db.url")))
+	d, err = gorm.Open(postgres.Open(c.GetString(url)))
 	if err != nil {
 		panic(err)
 	}
