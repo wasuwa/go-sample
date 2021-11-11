@@ -11,14 +11,14 @@ var d *gorm.DB
 
 func Init() {
 	var err error
-	c := config.GetConfig()
+	c := config.Config()
 	d, err = gorm.Open(postgres.Open(c.GetString("db.url")))
 	if err != nil {
 		panic(err)
 	}
 }
 
-func GetDB() *gorm.DB {
+func DB() *gorm.DB {
 	return d
 }
 

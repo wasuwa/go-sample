@@ -25,14 +25,14 @@ type ReceiveUser struct {
 
 func (u *User) All() ([]User, error) {
 	var users []User
-	d := database.GetDB()
+	d := database.DB()
 	d = d.Find(&users)
 	return users, d.Error
 }
 
 func (u *User) Create() error {
 	var err error
-	d := database.GetDB()
+	d := database.DB()
 	u.Password, err = u.hashPassword()
 	if err != nil {
 		return err
@@ -42,14 +42,14 @@ func (u *User) Create() error {
 }
 
 func (u *User) Find(id int) error {
-	d := database.GetDB()
+	d := database.DB()
 	d = d.Where("id = ?", id).Take(u)
 	return d.Error
 }
 
 func (u *User) Update(id int) error {
 	var err error
-	d := database.GetDB()
+	d := database.DB()
 	u.Password, err = u.hashPassword()
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (u *User) Update(id int) error {
 }
 
 func (u *User) Destroy(id int) error {
-	d := database.GetDB()
+	d := database.DB()
 	d = d.Delete(u, id)
 	if d.RowsAffected == 0 {
 		err := errors.New("record not found")

@@ -14,6 +14,6 @@ func Init(path, env string) {
 	}
 }
 
-func GetConfig() *viper.Viper {
+func Config() *viper.Viper {
 	return c
 }
