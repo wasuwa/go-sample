@@ -4,20 +4,17 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"twitter-app/config"
 	"twitter-app/controllers"
 	"twitter-app/database"
+	"twitter-app/factories"
 	"twitter-app/server"
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
-var userJSON = `{"name":"mokou","email:"mokou@mokou.com","mokomoko"}`
-
 func TestIndexUser(t *testing.T) {
-	config.Init("../config/environments/", "test")
-	database.Init()
+	factories.Seed()
 	defer database.Close()
 	e := server.Router()
 
@@ -31,4 +28,6 @@ func TestIndexUser(t *testing.T) {
 		// mock DB を用意する必要がある
 		println(rec.Body.String())
 	}
+
+	factories.Rollback()
 }
