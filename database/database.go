@@ -7,22 +7,22 @@ import (
 	"twitter-app/config"
 )
 
-var d *gorm.DB
+var db *gorm.DB
 
 func Init() {
 	var err error
 	c := config.Config()
-	d, err = gorm.Open(postgres.Open(c.GetString("db.url")))
+	db, err = gorm.Open(postgres.Open(c.GetString("db.url")))
 	if err != nil {
 		panic(err)
 	}
 }
 
 func DB() *gorm.DB {
-	return d
+	return db
 }
 
 func Close() {
-	d, _ := d.DB()
+	d, _ := db.DB()
 	d.Close()
 }
