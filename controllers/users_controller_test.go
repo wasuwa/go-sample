@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"twitter-app/config"
 	"twitter-app/controllers"
 	"twitter-app/database"
-	"twitter-app/factories"
 	"twitter-app/server"
 
 	"github.com/labstack/echo/v4"
@@ -14,7 +14,8 @@ import (
 )
 
 func TestIndexUser(t *testing.T) {
-	factories.Seed()
+	config.Init("../config/environments/", "test")
+	database.Init()
 	defer database.Close()
 	e := server.Router()
 
@@ -25,9 +26,5 @@ func TestIndexUser(t *testing.T) {
 
 	if assert.NoError(t, controllers.IndexUser(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		// mock DB を用意する必要がある
-		println(rec.Body.String())
 	}
-
-	factories.Rollback()
 }
