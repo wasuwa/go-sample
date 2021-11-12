@@ -14,6 +14,7 @@ import (
 )
 
 func TestIndexUser(t *testing.T) {
+	assert := assert.New(t)
 	config.Init("../config/environments/", "test")
 	database.Init()
 	defer database.Close()
@@ -24,7 +25,11 @@ func TestIndexUser(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	if assert.NoError(t, controllers.IndexUser(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
+	if assert.NoError(controllers.IndexUser(c)) {
+		assert.Equal(http.StatusOK, rec.Code)
 	}
+}
+
+func TestShowUser(t * testing.T) {
+
 }
