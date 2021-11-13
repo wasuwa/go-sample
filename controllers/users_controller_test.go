@@ -107,6 +107,7 @@ func TestCreateUser(t *testing.T) {
 	assert := assert.New(t)
 	_, teardown := setup()
 	defer teardown()
+
 	e := server.Router()
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -152,10 +153,11 @@ func TestUpdateUser(t *testing.T) {
 	assert := assert.New(t)
 	db, teardown := setup()
 	defer teardown()
-	e := server.Router()
+
 	db.Create(user)
 	db.Find(user)
 	id := strconv.Itoa(int(user.ID))
+	e := server.Router()
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(tc.input))
@@ -178,10 +180,11 @@ func TestDestroyUser(t *testing.T) {
 	assert := assert.New(t)
 	db, teardown := setup()
 	defer teardown()
-	e := server.Router()
+
 	db.Create(user)
 	db.Find(user)
 	id := strconv.Itoa(int(user.ID))
+	e := server.Router()
 	req := httptest.NewRequest(http.MethodDelete, "/users/:id", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
