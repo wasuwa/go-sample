@@ -18,6 +18,15 @@ import (
 	"gorm.io/gorm"
 )
 
+var (
+	u = &models.User{
+		ID:       0,
+		Name:     "mokou",
+		Email:    "katou@jyun.iti",
+		Password: "futontyan",
+	}
+	userJSON = `{"name":"god","email":"takada@ken.shi","password":"zetsuen"}`
+)
 
 func SetTransaction() *gorm.DB {
 	db := database.DB()
@@ -25,16 +34,6 @@ func SetTransaction() *gorm.DB {
 	database.SetDB(db)
 	return db
 }
-
-var (
-	u = &models.User{
-		ID: 0,
-		Name: "mokou",
-		Email: "katou@jyun.iti",
-		Password: "futontyan",
-	}
-	userJSON = `{"name":"god","email":"takada@ken.shi","password":"zetsuen"}`
-)
 
 func TestIndexUser(t *testing.T) {
 	assert := assert.New(t)
@@ -78,7 +77,7 @@ func TestCreateUser(t *testing.T) {
 	}
 }
 
-func TestShowUser(t * testing.T) {
+func TestShowUser(t *testing.T) {
 	assert := assert.New(t)
 	config.Init("../config/environments/", "test")
 	database.Init()
