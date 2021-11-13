@@ -55,11 +55,14 @@ func (u *User) Update(id int) error {
 		return err
 	}
 	d = d.Where("id = ?", id).Updates(u)
-	// if d.RowsAffected == 0 {
-	// 	err = errors.New("record not found")
-	// 	return err
-	// }
-	return d.Error
+	if d.Error != nil {
+		return d.Error
+	}
+	if d.RowsAffected == 0 {
+		err = errors.New("record not found")
+		return err
+	}
+	return nil
 }
 
 func (u *User) Destroy(id int) error {
