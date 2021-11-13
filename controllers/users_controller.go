@@ -10,11 +10,11 @@ import (
 
 func IndexUser(c echo.Context) error {
 	var u models.User
-	users, err := u.All()
+	uu, err := u.All()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, uu)
 }
 
 func CreateUser(c echo.Context) error {

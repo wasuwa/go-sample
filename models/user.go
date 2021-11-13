@@ -24,10 +24,10 @@ type ReceiveUser struct {
 }
 
 func (u *User) All() ([]User, error) {
-	var users []User
+	var uu []User
 	d := database.DB()
-	d = d.Find(&users)
-	return users, d.Error
+	d = d.Find(&uu)
+	return uu, d.Error
 }
 
 func (u *User) Create() error {
