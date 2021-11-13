@@ -125,29 +125,25 @@ func TestCreateUser(t *testing.T) {
 	}
 }
 
-// func TestShowUser(t *testing.T) {
-// 	assert := assert.New(t)
-// 	db, teardown := setup()
-// 	defer teardown()
+func TestShowUser(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := setup()
+	defer teardown()
 
-// 	db.Create(user)
-// 	db.Find(user)
-// 	id := strconv.Itoa(int(user.ID))
+	db.Create(user)
+	db.Find(user)
+	id := strconv.Itoa(int(user.ID))
+	e := server.Router()
+	req := httptest.NewRequest(http.MethodGet, "/users/:id", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues(id)
 
-// 	e := server.Router()
-// 	req := httptest.NewRequest(http.MethodGet, "/users/:id", nil)
-// 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 	rec := httptest.NewRecorder()
-
-// 	c := e.NewContext(req, rec)
-// 	c.SetParamNames("id")
-// 	c.SetParamValues(id)
-
-// 	if assert.NoError(controllers.ShowUser(c)) {
-// 		assert.Equal(http.StatusOK, rec.Code)
-// 		assert.Contains(rec.Body.String(), id)
-// 	}
-// }
+	assert.NoError(controllers.ShowUser(c))
+	assert.Equal(http.StatusOK, rec.Code)
+}
 
 func TestUpdateUser(t *testing.T) {
 	assert := assert.New(t)
@@ -191,6 +187,7 @@ func TestDestroyUser(t *testing.T) {
 	c := e.NewContext(req, rec)
 	c.SetParamNames("id")
 	c.SetParamValues(id)
+
 	assert.NoError(controllers.DestroyUser(c))
 	assert.Equal(http.StatusNoContent, rec.Code)
 }
