@@ -22,6 +22,10 @@ func DB() *gorm.DB {
 	return db
 }
 
+func SetDB(d *gorm.DB) {
+	db = d
+}
+
 func Close() {
 	d, _ := db.DB()
 	d.Close()
