@@ -18,15 +18,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	u = &models.User{
-		ID:       0,
-		Name:     "mokou",
-		Email:    "katou@jyun.iti",
-		Password: "futontyan",
+func setup() func() {
+	config.Init("../config/environments/", "test")
+	database.Init()
+	return func() {
+		database.Close()
 	}
-	userJSON = `{"name":"god","email":"takada@ken.shi","password":"zetsuen"}`
-)
+}
 
 func SetTransaction() *gorm.DB {
 	db := database.DB()
@@ -35,12 +33,21 @@ func SetTransaction() *gorm.DB {
 	return db
 }
 
+var (
+	u = &models.User{
+		ID:       0,
+		Name:     "mokou",
+		Email:    "katou@jyun.iti",
+		Password: "futontyan",
+	}
+	uJSON = `{"name":"god","email":"takada@ken.shi","password":"zetsuen"}`
+)
+
 func TestIndexUser(t *testing.T) {
 	assert := assert.New(t)
-	config.Init("../config/environments/", "test")
-	database.Init()
+	teardown := setup()
 	db := SetTransaction()
-	defer database.Close()
+	defer teardown()
 	defer db.Rollback()
 
 	db.Create(u)
@@ -59,14 +66,13 @@ func TestIndexUser(t *testing.T) {
 
 func TestCreateUser(t *testing.T) {
 	assert := assert.New(t)
-	config.Init("../config/environments/", "test")
-	database.Init()
+	teardown := setup()
 	db := SetTransaction()
-	defer database.Close()
+	defer teardown()
 	defer db.Rollback()
 
 	e := server.Router()
-	req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(userJSON))
+	req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(uJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -79,10 +85,9 @@ func TestCreateUser(t *testing.T) {
 
 func TestShowUser(t *testing.T) {
 	assert := assert.New(t)
-	config.Init("../config/environments/", "test")
-	database.Init()
+	teardown := setup()
 	db := SetTransaction()
-	defer database.Close()
+	defer teardown()
 	defer db.Rollback()
 
 	db.Create(u)
@@ -106,10 +111,9 @@ func TestShowUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	assert := assert.New(t)
-	config.Init("../config/environments/", "test")
-	database.Init()
+	teardown := setup()
 	db := SetTransaction()
-	defer database.Close()
+	defer teardown()
 	defer db.Rollback()
 
 	db.Create(u)
@@ -117,7 +121,7 @@ func TestUpdateUser(t *testing.T) {
 	id := strconv.Itoa(int(u.ID))
 
 	e := server.Router()
-	req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(userJSON))
+	req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(uJSON))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 
@@ -132,10 +136,9 @@ func TestUpdateUser(t *testing.T) {
 
 func TestDestroyUser(t *testing.T) {
 	assert := assert.New(t)
-	config.Init("../config/environments/", "test")
-	database.Init()
+	teardown := setup()
 	db := SetTransaction()
-	defer database.Close()
+	defer teardown()
 	defer db.Rollback()
 
 	db.Create(u)
