@@ -19,8 +19,6 @@ import (
 
 
 func Transaction() *gorm.DB {
-	config.Init("../config/environments/", "test")
-	database.Init()
 	db := database.DB()
 	db = db.Begin()
 	database.SetDB(db)
@@ -38,6 +36,8 @@ var (
 
 func TestIndexUser(t *testing.T) {
 	assert := assert.New(t)
+	config.Init("../config/environments/", "test")
+	database.Init()
 	db := Transaction()
 	defer database.Close()
 	defer db.Rollback()
