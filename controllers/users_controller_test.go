@@ -3,8 +3,8 @@ package controllers_test
 import (
 	"net/http"
 	"net/http/httptest"
-
 	// "strings"
+
 	"testing"
 	"twitter-app/config"
 	"twitter-app/controllers"
@@ -26,12 +26,7 @@ func SetTransaction() *gorm.DB {
 }
 
 var (
-	actualUser = &models.User{
-		Name: "mokou",
-		Email: "katou@jyun.iti",
-		Password: "futontyan",
-	}
-	expectUser = `"name":"mokou","email":"katou@jyun.iti","password":"futontyan"`
+	userJSON = `{"name":"mokou","email":"katou@jyun.iti","password":"futontyan"}`
 )
 
 func TestIndexUser(t *testing.T) {
@@ -42,7 +37,12 @@ func TestIndexUser(t *testing.T) {
 	defer database.Close()
 	defer db.Rollback()
 
-	db.Create(actualUser)
+	u := &models.User{
+		Name: "mokou",
+		Email: "katou@jyun.iti",
+		Password: "futontyan",
+	}
+	db.Create(u)
 
 	e := server.Router()
 	req := httptest.NewRequest(http.MethodGet, "/users", nil)
@@ -52,7 +52,7 @@ func TestIndexUser(t *testing.T) {
 
 	if assert.NoError(controllers.IndexUser(c)) {
 		assert.Equal(http.StatusOK, rec.Code)
-		assert.Contains(rec.Body.String(), expectUser)
+		assert.Contains(rec.Body.String(), "mokou")
 	}
 }
 
@@ -60,10 +60,12 @@ func TestIndexUser(t *testing.T) {
 // 	assert := assert.New(t)
 // 	config.Init("../config/environments/", "test")
 // 	database.Init()
+// 	db := SetTransaction()
 // 	defer database.Close()
-// 	e := server.Router()
+// 	defer db.Rollback()
 
-// 	req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(userJSON))
+// 	e := server.Router()
+// 	req := httptest.NewRequest(http.MethodGet, "/users", strings.NewReader(userJSON))
 // 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 // 	rec := httptest.NewRecorder()
 // 	c := e.NewContext(req, rec)
