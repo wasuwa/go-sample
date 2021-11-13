@@ -3,6 +3,7 @@ package controllers_test
 import (
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 
 	"testing"
@@ -76,24 +77,38 @@ func TestCreateUser(t *testing.T) {
 	}
 }
 
-// func TestShowUser(t * testing.T) {
-// 	assert := assert.New(t)
-// 	config.Init("../config/environments/", "test")
-// 	database.Init()
-// 	defer database.Close()
-// 	e := server.Router()
+func TestShowUser(t * testing.T) {
+	assert := assert.New(t)
+	config.Init("../config/environments/", "test")
+	database.Init()
+	db := SetTransaction()
+	defer database.Close()
+	defer db.Rollback()
 
-// 	req := httptest.NewRequest(http.MethodGet, "/users", nil)
-// 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 	rec := httptest.NewRecorder()
-// 	c := e.NewContext(req, rec)
-// 	c.SetParamNames("id")
-// 	c.SetParamValues("1")
+	u := &models.User{
+		ID: 0,
+		Name: "mokou",
+		Email: "katou@jyun.iti",
+		Password: "futontyan",
+	}
+	db.Create(u)
+	db.Find(u)
+	id := strconv.Itoa(int(u.ID))
 
-// 	if assert.NoError(controllers.IndexUser(c)) {
-// 		assert.Equal(http.StatusOK, rec.Code)
-// 	}
-// }
+	e := server.Router()
+	req := httptest.NewRequest(http.MethodGet, "/users/:id", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues(id)
+
+	if assert.NoError(controllers.ShowUser(c)) {
+		assert.Equal(http.StatusOK, rec.Code)
+		assert.Contains(rec.Body.String(), id)
+	}
+}
 
 // func TestUpdateUser(t *testing.T) {
 // 	assert := assert.New(t)
