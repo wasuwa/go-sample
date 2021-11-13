@@ -39,18 +39,50 @@ var (
 		Password: "futontyan",
 	}
 	testcases = []struct {
-		name  string
-		input  string
+		name    string
+		input   string
 		wantErr bool
 	}{
-		{"正しく通ること", `{"name":"mokou","email":"mokou@example.com","password":"orange"}`, false},
-		{"パスワードが6文字以上の制限でエラーが返ること", `{"name":"mokou","email":"mokou@example.com","password":"apple"}`, true},
-		{"名前は15文字以下の制限でエラーが返ること", fmt.Sprintf(`{"name":"%s","email":"mokou@example.com","password":"orange"}`, strings.Repeat("mokou", 4)), true},
-		{"メールアドレスは256文字以下の制限でエラーが返ること", fmt.Sprintf(`{"name":"mokou","email":"%s","password":"orange"}`, strings.Repeat("mokou", 49) + "@example.com"), true},
-		{"メールアドレスのフォーマットでエラーが返ること", `{"name":"mokou","email":"examplecom","password":"orange"}`, true},
-		{"名前は必須の制限でエラーが返ること", `{"email":"mokou@example.com","password":"orange"}`, true},
-		{"メールアドレスは必須の制限でエラーが返ること", `{"name":"mokou","password":"orange"}`, true},
-		{"パスワードは必須の制限でエラーが返ること", `{"name":"mokou","email":"mokou@example.com"}`, true},
+		{
+			"正しく通ること",
+			`{"name":"mokou","email":"mokou@example.com","password":"orange"}`,
+			false,
+		},
+		{
+			"パスワードが6文字以上の制限でエラーが返ること",
+			`{"name":"mokou","email":"mokou@example.com","password":"apple"}`,
+			true,
+		},
+		{
+			"名前は15文字以下の制限でエラーが返ること",
+			fmt.Sprintf(`{"name":"%s","email":"mokou@example.com","password":"orange"}`, strings.Repeat("mokou", 4)),
+			true,
+		},
+		{
+			"メールアドレスは256文字以下の制限でエラーが返ること",
+			fmt.Sprintf(`{"name":"mokou","email":"%s","password":"orange"}`, strings.Repeat("mokou", 49)+"@example.com"),
+			true,
+		},
+		{
+			"メールアドレスのフォーマットでエラーが返ること",
+			`{"name":"mokou","email":"examplecom","password":"orange"}`,
+			true,
+		},
+		{
+			"名前は必須の制限でエラーが返ること",
+			`{"email":"mokou@example.com","password":"orange"}`,
+			true,
+		},
+		{
+			"メールアドレスは必須の制限でエラーが返ること",
+			`{"name":"mokou","password":"orange"}`,
+			true,
+		},
+		{
+			"パスワードは必須の制限でエラーが返ること",
+			`{"name":"mokou","email":"mokou@example.com"}`,
+			true,
+		},
 	}
 	// uJSON = `{"name":"god","email":"takada@ken.shi","password":"zetsuen"}`
 )
