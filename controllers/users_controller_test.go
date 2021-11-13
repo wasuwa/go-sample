@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	// "strconv"
+	"strconv"
+
 	"strings"
 
 	"testing"
@@ -34,9 +35,9 @@ func setup() (*gorm.DB, func()) {
 var (
 	user = &models.User{
 		ID:       0,
-		Name:     "mokou",
-		Email:    "katou@jyun.iti",
-		Password: "futontyan",
+		Name:     "takada",
+		Email:    "god@example.com",
+		Password: "kenshi",
 	}
 	testcases = []struct {
 		name    string
@@ -151,28 +152,31 @@ func TestCreateUser(t *testing.T) {
 // 	}
 // }
 
-// func TestUpdateUser(t *testing.T) {
-// 	assert := assert.New(t)
-// 	db, teardown := setup()
-// 	defer teardown()
-
-// 	db.Create(user)
-// 	db.Find(user)
-// 	id := strconv.Itoa(int(user.ID))
-
-// 	e := server.Router()
-// 	req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(uJSON))
-// 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 	rec := httptest.NewRecorder()
-
-// 	c := e.NewContext(req, rec)
-// 	c.SetParamNames("id")
-// 	c.SetParamValues(id)
-
-// 	if assert.NoError(controllers.UpdateUser(c)) {
-// 		assert.Equal(http.StatusNoContent, rec.Code)
-// 	}
-// }
+func TestUpdateUser(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := setup()
+	defer teardown()
+	e := server.Router()
+	db.Create(user)
+	db.Find(user)
+	id := strconv.Itoa(int(user.ID))
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(tc.input))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			c.SetParamNames("id")
+			c.SetParamValues(id)
+			if tc.wantErr {
+				assert.Error(controllers.UpdateUser(c))
+			} else {
+				assert.NoError(controllers.UpdateUser(c))
+				assert.Equal(http.StatusNoContent, rec.Code)
+			}
+		})
+	}
+}
 
 // func TestDestroyUser(t *testing.T) {
 // 	assert := assert.New(t)
