@@ -18,19 +18,16 @@ import (
 	"gorm.io/gorm"
 )
 
-func setup() func() {
+func setup() (*gorm.DB, func()) {
 	config.Init("../config/environments/", "test")
 	database.Init()
-	return func() {
-		database.Close()
-	}
-}
-
-func SetTransaction() *gorm.DB {
 	db := database.DB()
 	db = db.Begin()
 	database.SetDB(db)
-	return db
+	return db, func() {
+		db.Rollback()
+		database.Close()
+	}
 }
 
 var (
@@ -45,10 +42,8 @@ var (
 
 func TestIndexUser(t *testing.T) {
 	assert := assert.New(t)
-	teardown := setup()
-	db := SetTransaction()
+	db, teardown := setup()
 	defer teardown()
-	defer db.Rollback()
 
 	db.Create(u)
 
@@ -66,10 +61,8 @@ func TestIndexUser(t *testing.T) {
 
 func TestCreateUser(t *testing.T) {
 	assert := assert.New(t)
-	teardown := setup()
-	db := SetTransaction()
+	_, teardown := setup()
 	defer teardown()
-	defer db.Rollback()
 
 	e := server.Router()
 	req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(uJSON))
@@ -85,10 +78,8 @@ func TestCreateUser(t *testing.T) {
 
 func TestShowUser(t *testing.T) {
 	assert := assert.New(t)
-	teardown := setup()
-	db := SetTransaction()
+	db, teardown := setup()
 	defer teardown()
-	defer db.Rollback()
 
 	db.Create(u)
 	db.Find(u)
@@ -111,10 +102,8 @@ func TestShowUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	assert := assert.New(t)
-	teardown := setup()
-	db := SetTransaction()
+	db, teardown := setup()
 	defer teardown()
-	defer db.Rollback()
 
 	db.Create(u)
 	db.Find(u)
@@ -136,10 +125,8 @@ func TestUpdateUser(t *testing.T) {
 
 func TestDestroyUser(t *testing.T) {
 	assert := assert.New(t)
-	teardown := setup()
-	db := SetTransaction()
+	db, teardown := setup()
 	defer teardown()
-	defer db.Rollback()
 
 	db.Create(u)
 	db.Find(u)
