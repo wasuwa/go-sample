@@ -130,3 +130,29 @@ func TestUpdateUser(t *testing.T) {
 		assert.Equal(http.StatusNoContent, rec.Code)
 	}
 }
+
+func TestDestroyUser(t *testing.T) {
+	assert := assert.New(t)
+	config.Init("../config/environments/", "test")
+	database.Init()
+	db := SetTransaction()
+	defer database.Close()
+	defer db.Rollback()
+
+	db.Create(u)
+	db.Find(u)
+	id := strconv.Itoa(int(u.ID))
+
+	e := server.Router()
+	req := httptest.NewRequest(http.MethodDelete, "/users/:id", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues(id)
+
+	if assert.NoError(controllers.DestroyUser(c)) {
+		assert.Equal(http.StatusNoContent, rec.Code)
+	}
+}
