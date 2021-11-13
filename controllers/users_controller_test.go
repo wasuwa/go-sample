@@ -27,7 +27,13 @@ func SetTransaction() *gorm.DB {
 }
 
 var (
-	userJSON = `{"name":"mokou","email":"katou@jyun.iti","password":"futontyan"}`
+	u = &models.User{
+		ID: 0,
+		Name: "mokou",
+		Email: "katou@jyun.iti",
+		Password: "futontyan",
+	}
+	userJSON = `{"name":"god","email":"takada@ken.shi","password":"zetsuen"}`
 )
 
 func TestIndexUser(t *testing.T) {
@@ -38,11 +44,6 @@ func TestIndexUser(t *testing.T) {
 	defer database.Close()
 	defer db.Rollback()
 
-	u := &models.User{
-		Name: "mokou",
-		Email: "katou@jyun.iti",
-		Password: "futontyan",
-	}
 	db.Create(u)
 
 	e := server.Router()
@@ -73,7 +74,7 @@ func TestCreateUser(t *testing.T) {
 
 	if assert.NoError(controllers.CreateUser(c)) {
 		assert.Equal(http.StatusCreated, rec.Code)
-		assert.Contains(rec.Body.String(), "mokou")
+		assert.Contains(rec.Body.String(), "god")
 	}
 }
 
@@ -85,12 +86,6 @@ func TestShowUser(t * testing.T) {
 	defer database.Close()
 	defer db.Rollback()
 
-	u := &models.User{
-		ID: 0,
-		Name: "mokou",
-		Email: "katou@jyun.iti",
-		Password: "futontyan",
-	}
 	db.Create(u)
 	db.Find(u)
 	id := strconv.Itoa(int(u.ID))
@@ -110,27 +105,28 @@ func TestShowUser(t * testing.T) {
 	}
 }
 
-// func TestUpdateUser(t *testing.T) {
-// 	assert := assert.New(t)
-// 	config.Init("../config/environments/", "test")
-// 	database.Init()
-// 	defer database.Close()
-// 	e := server.Router()
+func TestUpdateUser(t *testing.T) {
+	assert := assert.New(t)
+	config.Init("../config/environments/", "test")
+	database.Init()
+	db := SetTransaction()
+	defer database.Close()
+	defer db.Rollback()
 
-// 	/// 実行しない！
-// 	// トランザクションを使う
-// 	// DB 構造
-// 	//  89 | alice | alice1@gmail.com | $2a$12$VpQ3EXcu.8WUPPzkbDC7SOQbCPNFxhYmBzCd9awGV1qfW6ymKRVj2 | 2021-11-12 21:28:55.573465 | 2021-11-12 21:28:55.573465
-//  	// 90 | alice | alice2@gmail.com | $2a$12$rnirxEnR4PzPjUgwcdFSxOEq/isB5x3Al4QCHNwiwY.6pbcjoDjB6 | 2021-11-12 21:28:59.564403 | 2021-11-12 21:28:59.564403
-//   //  91 | alice | alice3@gmail.com | $2a$12$RwCDLxgEQkkX03MGUWbD8OMdkwZJvpJxJusTrWNMCS04m1S6mdKbG | 2021-11-12 21:29:03.370536 | 2021-11-12 21:29:03.370536
-// 	req := httptest.NewRequest(http.MethodPatch, "/users", strings.NewReader(userJSON))
-// 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 	rec := httptest.NewRecorder()
-// 	c := e.NewContext(req, rec)
-// 	c.SetParamNames("id")
-// 	c.SetParamValues("90")
+	db.Create(u)
+	db.Find(u)
+	id := strconv.Itoa(int(u.ID))
 
-// 	if assert.NoError(controllers.UpdateUser(c)) {
-// 		assert.Equal(http.StatusNoContent, rec.Code)
-// 	}
-// }
+	e := server.Router()
+	req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(userJSON))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+
+	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues(id)
+
+	if assert.NoError(controllers.UpdateUser(c)) {
+		assert.Equal(http.StatusNoContent, rec.Code)
+	}
+}
