@@ -3,7 +3,7 @@ package controllers_test
 import (
 	"net/http"
 	"net/http/httptest"
-	// "strings"
+	"strings"
 
 	"testing"
 	"twitter-app/config"
@@ -56,24 +56,25 @@ func TestIndexUser(t *testing.T) {
 	}
 }
 
-// func TestCreateUser(t *testing.T) {
-// 	assert := assert.New(t)
-// 	config.Init("../config/environments/", "test")
-// 	database.Init()
-// 	db := SetTransaction()
-// 	defer database.Close()
-// 	defer db.Rollback()
+func TestCreateUser(t *testing.T) {
+	assert := assert.New(t)
+	config.Init("../config/environments/", "test")
+	database.Init()
+	db := SetTransaction()
+	defer database.Close()
+	defer db.Rollback()
 
-// 	e := server.Router()
-// 	req := httptest.NewRequest(http.MethodGet, "/users", strings.NewReader(userJSON))
-// 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 	rec := httptest.NewRecorder()
-// 	c := e.NewContext(req, rec)
+	e := server.Router()
+	req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(userJSON))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
 
-// 	if assert.NoError(controllers.CreateUser(c)) {
-// 		assert.Equal(http.StatusCreated, rec.Code)
-// 	}
-// }
+	if assert.NoError(controllers.CreateUser(c)) {
+		assert.Equal(http.StatusCreated, rec.Code)
+		assert.Contains(rec.Body.String(), "mokou")
+	}
+}
 
 // func TestShowUser(t * testing.T) {
 // 	assert := assert.New(t)
