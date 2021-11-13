@@ -55,26 +55,6 @@ var (
 	// uJSON = `{"name":"god","email":"takada@ken.shi","password":"zetsuen"}`
 )
 
-func TestCreateUser(t *testing.T) {
-	assert := assert.New(t)
-	_, teardown := setup()
-	defer teardown()
-	e := server.Router()
-	for _, tc := range testcases {
-		t.Run(tc.name, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(tc.input))
-			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-			rec := httptest.NewRecorder()
-			c := e.NewContext(req, rec)
-			if tc.wantErr {
-				assert.Error(controllers.CreateUser(c))
-			} else {
-				assert.NoError(controllers.CreateUser(c))
-			}
-		})
-	}
-}
-
 // func TestIndexUser(t *testing.T) {
 // 	assert := assert.New(t)
 // 	db, teardown := setup()
@@ -94,22 +74,26 @@ func TestCreateUser(t *testing.T) {
 // 	}
 // }
 
-// func TestCreateUser(t *testing.T) {
-// 	assert := assert.New(t)
-// 	_, teardown := setup()
-// 	defer teardown()
-
-// 	e := server.Router()
-// 	req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(uJSON))
-// 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 	rec := httptest.NewRecorder()
-// 	c := e.NewContext(req, rec)
-
-// 	if assert.NoError(controllers.CreateUser(c)) {
-// 		assert.Equal(http.StatusCreated, rec.Code)
-// 		assert.Contains(rec.Body.String(), "god")
-// 	}
-// }
+func TestCreateUser(t *testing.T) {
+	assert := assert.New(t)
+	_, teardown := setup()
+	defer teardown()
+	e := server.Router()
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(tc.input))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			if tc.wantErr {
+				assert.Error(controllers.CreateUser(c))
+			} else {
+				assert.NoError(controllers.CreateUser(c))
+				assert.Equal(http.StatusCreated, rec.Code)
+			}
+		})
+	}
+}
 
 // func TestShowUser(t *testing.T) {
 // 	assert := assert.New(t)
