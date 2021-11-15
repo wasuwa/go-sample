@@ -32,33 +32,33 @@ func (u *User) All() ([]User, error) {
 
 func (u *User) Create() error {
 	var err error
-	d := database.DB()
+	db := database.DB()
 	u.Password, err = u.hashPassword()
 	if err != nil {
 		return err
 	}
-	d = d.Create(u)
-	return d.Error
+	db = db.Create(u)
+	return db.Error
 }
 
 func (u *User) Find(id int) error {
-	d := database.DB()
-	d = d.Where("id = ?", id).Take(u)
-	return d.Error
+	db := database.DB()
+	db = db.Where("id = ?", id).Take(u)
+	return db.Error
 }
 
 func (u *User) Update(id int) error {
 	var err error
-	d := database.DB()
+	db := database.DB()
 	u.Password, err = u.hashPassword()
 	if err != nil {
 		return err
 	}
-	d = d.Where("id = ?", id).Updates(u)
-	if d.Error != nil {
-		return d.Error
+	db = db.Where("id = ?", id).Updates(u)
+	if db.Error != nil {
+		return db.Error
 	}
-	if d.RowsAffected == 0 {
+	if db.RowsAffected == 0 {
 		err = errors.New("record not found")
 		return err
 	}
@@ -66,13 +66,13 @@ func (u *User) Update(id int) error {
 }
 
 func (u *User) Destroy(id int) error {
-	d := database.DB()
-	d = d.Delete(u, id)
-	if d.RowsAffected == 0 {
+	db := database.DB()
+	db = db.Delete(u, id)
+	if db.RowsAffected == 0 {
 		err := errors.New("record not found")
 		return err
 	}
-	return d.Error
+	return db.Error
 }
 
 func (r *ReceiveUser) BindUser(u *User) {
