@@ -22,11 +22,17 @@ func DB() *gorm.DB {
 	return db
 }
 
-func SetDB(d *gorm.DB) {
-	db = d
-}
-
 func Close() {
 	d, _ := db.DB()
 	d.Close()
+}
+
+func SetupTestDB() (*gorm.DB, func()) {
+	config.Init("../config/environments/", "test")
+	Init()
+	db = db.Begin()
+	return db, func() {
+		db.Rollback()
+		Close()
+	}
 }

@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"testing"
-	"twitter-app/config"
 	"twitter-app/controllers"
 	"twitter-app/database"
 	"twitter-app/models"
@@ -17,20 +16,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm"
 )
-
-func setup() (*gorm.DB, func()) {
-	config.Init("../config/environments/", "test")
-	database.Init()
-	db := database.DB()
-	db = db.Begin()
-	database.SetDB(db)
-	return db, func() {
-		db.Rollback()
-		database.Close()
-	}
-}
 
 var (
 	user = &models.User{
@@ -89,7 +75,7 @@ var (
 
 func TestIndexUser(t *testing.T) {
 	assert := assert.New(t)
-	db, teardown := setup()
+	db, teardown := database.SetupTestDB()
 	defer teardown()
 
 	db.Create(user)
@@ -105,7 +91,7 @@ func TestIndexUser(t *testing.T) {
 
 func TestCreateUser(t *testing.T) {
 	assert := assert.New(t)
-	_, teardown := setup()
+	_, teardown := database.SetupTestDB()
 	defer teardown()
 
 	e := server.Router()
@@ -127,7 +113,7 @@ func TestCreateUser(t *testing.T) {
 
 func TestShowUser(t *testing.T) {
 	assert := assert.New(t)
-	db, teardown := setup()
+	db, teardown := database.SetupTestDB()
 	defer teardown()
 
 	db.Create(user)
@@ -147,7 +133,7 @@ func TestShowUser(t *testing.T) {
 
 func TestUpdateUser(t *testing.T) {
 	assert := assert.New(t)
-	db, teardown := setup()
+	db, teardown := database.SetupTestDB()
 	defer teardown()
 
 	db.Create(user)
@@ -174,7 +160,7 @@ func TestUpdateUser(t *testing.T) {
 
 func TestDestroyUser(t *testing.T) {
 	assert := assert.New(t)
-	db, teardown := setup()
+	db, teardown := database.SetupTestDB()
 	defer teardown()
 
 	db.Create(user)
