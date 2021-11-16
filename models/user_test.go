@@ -1,6 +1,7 @@
 package models_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 	"twitter-app/database"
@@ -29,6 +30,6 @@ func TestAll(t *testing.T) {
 	db.Create(user)
 	uu, err := user.All()
 
-	assert.Contains(uu[0], user)
+	assert.Contains(uu, *user)
 	assert.NoError(err)
 }
