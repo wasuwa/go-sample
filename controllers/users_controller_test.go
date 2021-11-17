@@ -117,7 +117,6 @@ func TestShowUser(t *testing.T) {
 	defer teardown()
 
 	db.Create(user)
-	db.Find(user)
 	id := strconv.Itoa(int(user.ID))
 	e := server.Router()
 	req := httptest.NewRequest(http.MethodGet, "/users/:id", nil)
@@ -137,7 +136,6 @@ func TestUpdateUser(t *testing.T) {
 	defer teardown()
 
 	db.Create(user)
-	db.Find(user)
 	id := strconv.Itoa(int(user.ID))
 	e := server.Router()
 	for _, tc := range testcases {
@@ -164,7 +162,6 @@ func TestDestroyUser(t *testing.T) {
 	defer teardown()
 
 	db.Create(user)
-	db.Find(user)
 	id := strconv.Itoa(int(user.ID))
 	e := server.Router()
 	req := httptest.NewRequest(http.MethodDelete, "/users/:id", nil)
