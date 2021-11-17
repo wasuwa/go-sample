@@ -95,4 +95,7 @@ func TestFind(t *testing.T) {
 
 	assert.Equal(id, int(u2.ID))
 	assert.NoError(err)
+
+	err = u2.Find(0)
+	assert.Error(err)
 }
