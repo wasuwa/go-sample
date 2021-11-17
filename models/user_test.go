@@ -11,14 +11,6 @@ import (
 
 var (
 	t	time.Time
-	user = &models.User{
-		ID:        0,
-		Name:      "takada",
-		Email:     "god@example.com",
-		Password:  "kenshi",
-		CreatedAt: t,
-		UpdatedAt: t,
-	}
 	testcases = []struct {
 		name    string
 		input   *models.User
@@ -56,10 +48,11 @@ func TestAll(t *testing.T) {
 	db, teardown := database.SetupTestDB()
 	defer teardown()
 
-	db.Create(user)
-	uu, err := user.All()
+	u := testcases[0].input
+	db.Create(u)
+	uu, err := u.All()
 
-	assert.Contains(uu, *user)
+	assert.Contains(uu, *u)
 	assert.NoError(err)
 }
 
@@ -74,8 +67,9 @@ func TestCreate(t *testing.T) {
 	)
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			err := user.Create()
-			db.Find(&user).Count(&c)
+			u := tc.input
+			err := u.Create()
+			db.Find(u).Count(&c)
 			if tc.wantErr {
 				assert.NotEqual(i, c)
 				assert.Error(err)
@@ -85,4 +79,20 @@ func TestCreate(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestFind(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := database.SetupTestDB()
+	defer teardown()
+
+	u1 := testcases[0].input
+	db.Create(u1)
+	id := int(u1.ID)
+
+	var u2 models.User
+	err := u2.Find(id)
+
+	assert.Equal(id, int(u2.ID))
+	assert.NoError(err)
 }
