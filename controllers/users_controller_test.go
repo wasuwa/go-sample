@@ -101,8 +101,7 @@ func TestCreateUser(t *testing.T) {
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
 			c := e.NewContext(req, rec)
-			err := controllers.CreateUser(c)
-			if tc.wantErr {
+			if err := controllers.CreateUser(c); tc.wantErr {
 				assert.Error(err)
 			} else {
 				assert.NoError(err)
@@ -149,8 +148,7 @@ func TestUpdateUser(t *testing.T) {
 			c := e.NewContext(req, rec)
 			c.SetParamNames("id")
 			c.SetParamValues(id)
-			err := controllers.UpdateUser(c)
-			if tc.wantErr {
+			if err := controllers.UpdateUser(c); tc.wantErr {
 				assert.Error(err)
 			} else {
 				assert.NoError(err)
