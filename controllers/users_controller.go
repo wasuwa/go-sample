@@ -36,18 +36,16 @@ func ShowUser(c echo.Context) error {
 }
 
 func CreateUser(c echo.Context) error {
-	u := new(models.User)
-	r := new(models.ReceiveUser)
-	err := c.Bind(r)
+	ru := new(models.ReceiveUser)
+	err := c.Bind(ru)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	err = c.Validate(r)
+	err = c.Validate(ru)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	r.BindUser(u)
-	err = u.Create()
+	u, err := services.CreateUser(ru)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
