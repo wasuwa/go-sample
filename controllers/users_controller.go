@@ -24,7 +24,7 @@ func IndexUser(c echo.Context) error {
 func ShowUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 	u, err := services.FindUser(id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -53,24 +53,24 @@ func CreateUser(c echo.Context) error {
 }
 
 func UpdateUser(c echo.Context) error {
-	u := new(models.User)
-	r := new(models.ReceiveUser)
+	ru := new(models.ReceiveUser)
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-	err = c.Bind(r)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	err = c.Validate(r)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	r.BindUser(u)
-	err = u.Update(id)
-	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+	err = c.Bind(ru)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	err = c.Validate(ru)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	err = services.UpdateUser(ru, id)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	} else if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusNoContent, nil)
 }

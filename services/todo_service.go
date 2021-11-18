@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"twitter-app/database"
 	"twitter-app/models"
 
@@ -43,24 +44,26 @@ func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
 	return u, nil
 }
 
-func UpdateUser(ru *models.ReceiveUser, id int) (*models.User, error) {
+func UpdateUser(ru *models.ReceiveUser, id int) error {
 	if ru.Password != "" {
 		var err error
 		ru.Password, err = hashPassword(ru.Password)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
 	db := database.DB()
 	u := new(models.User)
 	bindUser(u, ru)
+	fmt.Println(u)
 	db = db.Where("id = ?", id).Updates(u)
+	fmt.Println(u)
 	if db.RowsAffected == 0 {
-		return nil, gorm.ErrRecordNotFound
+		return gorm.ErrRecordNotFound
 	} else if db.Error != nil {
-		return nil, db.Error
+		return db.Error
 	}
-	return u, nil
+	return nil
 }
 
 func DestroyUser(id int) error {
