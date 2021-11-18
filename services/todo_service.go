@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"twitter-app/database"
 	"twitter-app/models"
 
@@ -39,7 +40,9 @@ func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
 	db := database.DB()
 	u := new(models.User)
 	bindUser(u, ru)
+	fmt.Println(u)
 	db = db.Create(u)
+	fmt.Println(u)
 	return u, db.Error
 }
 

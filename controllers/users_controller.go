@@ -76,12 +76,11 @@ func UpdateUser(c echo.Context) error {
 }
 
 func DestroyUser(c echo.Context) error {
-	var u models.User
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	err = u.Destroy(id)
+	err = services.DestroyUser(id)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	} else if err != nil {
