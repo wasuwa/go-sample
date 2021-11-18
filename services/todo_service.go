@@ -60,6 +60,16 @@ func UpdateUser(ru *models.ReceiveUser, id int) (*models.User, error) {
 	return u, db.Error
 }
 
+func DestroyUser(id int) error {
+	u := new(models.User)
+	db := database.DB()
+	db = db.Delete(u, id)
+	if db.RowsAffected == 0 {
+		notFoundError()
+	}
+	return db.Error
+}
+
 func hashPassword(pass string) (string, error) {
 	h, err := bcrypt.GenerateFromPassword([]byte(pass), 12)
 	return string(h), err
