@@ -1,20 +1,24 @@
 package controllers
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 	"twitter-app/models"
+	"twitter-app/services"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 func IndexUser(c echo.Context) error {
-	var u models.User
-	uu, err := u.All()
-	if err != nil {
+	users, err := services.AllUser()
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	} else if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, uu)
+	return c.JSON(http.StatusOK, users)
 }
 
 func CreateUser(c echo.Context) error {

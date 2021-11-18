@@ -1,18 +1,21 @@
 package services
 
 import (
-	"errors"
 	"twitter-app/database"
 	"twitter-app/models"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func AllUser() ([]models.User, error) {
-	d := database.DB()
+	db := database.DB()
 	var users []models.User
-	d = d.Find(&users)
-	return users, d.Error
+	db = db.Find(&users)
+	if db.RowsAffected == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return users, db.Error
 }
 
 func FindUser(id int) (*models.User, error) {
@@ -20,7 +23,7 @@ func FindUser(id int) (*models.User, error) {
 	u := new(models.User)
 	db = db.Where("id = ?", id).Find(u)
 	if db.RowsAffected == 0 {
-		return nil, notFoundError()
+		return nil, gorm.ErrRecordNotFound
 	}
 	return u, db.Error
 }
@@ -55,7 +58,7 @@ func UpdateUser(ru *models.ReceiveUser, id int) (*models.User, error) {
 	if db.Error != nil {
 		return nil, db.Error
 	} else if db.RowsAffected == 0 {
-		return nil, notFoundError()
+		return nil, gorm.ErrRecordNotFound
 	}
 	return u, db.Error
 }
@@ -65,7 +68,7 @@ func DestroyUser(id int) error {
 	db := database.DB()
 	db = db.Delete(u, id)
 	if db.RowsAffected == 0 {
-		notFoundError()
+		return gorm.ErrRecordNotFound
 	}
 	return db.Error
 }
@@ -79,8 +82,4 @@ func bindUser(u *models.User, ru *models.ReceiveUser) {
 	u.Name 		 = ru.Name
 	u.Email 	 = ru.Email
 	u.Password = ru.Password
-}
-
-func notFoundError() error {
-	return errors.New("record not found")
 }
