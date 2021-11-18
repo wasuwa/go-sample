@@ -10,7 +10,15 @@ import (
 )
 
 var (
-	t	time.Time
+	user = &models.User{
+		ID:        0,
+		Name:      "jun",
+		Email:     "katou@example.com",
+		Password:  "nejiki",
+		CreatedAt: t,
+		UpdatedAt: t,
+	}
+	t         time.Time
 	testcases = []struct {
 		name    string
 		input   *models.User
@@ -28,18 +36,18 @@ var (
 			},
 			false,
 		},
-		{
-			"emailの重複でエラーが発生すること",
-			&models.User{
-				ID:        0,
-				Name:      "mokou",
-				Email:     "god@example.com",
-				Password:  "yutaka",
-				CreatedAt: t,
-				UpdatedAt: t,
-			},
-			true,
-		},
+		// {
+		// 	"emailの重複でエラーが発生すること",
+		// 	&models.User{
+		// 		ID:        0,
+		// 		Name:      "mokou",
+		// 		Email:     "god@example.com",
+		// 		Password:  "yutaka",
+		// 		CreatedAt: t,
+		// 		UpdatedAt: t,
+		// 	},
+		// 	true,
+		// },
 	}
 )
 
@@ -86,16 +94,41 @@ func TestFind(t *testing.T) {
 	db, teardown := database.SetupTestDB()
 	defer teardown()
 
-	u1 := testcases[0].input
-	db.Create(u1)
-	id := int(u1.ID)
+	db.Create(user)
+	id := int(user.ID)
 
-	var u2 models.User
+	var (
+		u2 models.User
+		u3 models.User
+	)
+
 	err := u2.Find(id)
-
 	assert.Equal(id, int(u2.ID))
 	assert.NoError(err)
 
-	err = u2.Find(0)
+	err = u3.Find(0)
 	assert.Error(err)
+}
+
+func TestUpdate(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := database.SetupTestDB()
+	defer teardown()
+
+	db.Create(user)
+	id := int(user.ID)
+
+	user.Email = "mokou@example.com"
+	db.Create(user)
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := tc.input.Update(id)
+			if tc.wantErr {
+				assert.Error(err)
+			} else {
+				assert.NoError(err)
+			}
+		})
+	}
 }

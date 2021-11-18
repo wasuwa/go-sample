@@ -43,13 +43,17 @@ func (u *User) Create() error {
 
 func (u *User) Find(id int) error {
 	db := database.DB()
-	db = db.Where("id = ?", id).Take(u)
+	db = db.Where("id = ?", id).Find(u)
+	if db.RowsAffected == 0 {
+		return notFoundError()
+	}
 	return db.Error
 }
 
 func (u *User) Update(id int) error {
 	var err error
 	db := database.DB()
+	// パスワードが送られてきた場合は
 	u.Password, err = u.hashPassword()
 	if err != nil {
 		return err
@@ -57,10 +61,8 @@ func (u *User) Update(id int) error {
 	db = db.Where("id = ?", id).Updates(u)
 	if db.Error != nil {
 		return db.Error
-	}
-	if db.RowsAffected == 0 {
-		err = errors.New("record not found")
-		return err
+	} else if db.RowsAffected == 0 {
+		return notFoundError()
 	}
 	return nil
 }
@@ -84,4 +86,8 @@ func (r *ReceiveUser) BindUser(u *User) {
 func (u *User) hashPassword() (string, error) {
 	h, err := bcrypt.GenerateFromPassword([]byte(u.Password), 12)
 	return string(h), err
+}
+
+func notFoundError() error {
+	return errors.New("record not found")
 }
