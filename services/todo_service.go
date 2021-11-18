@@ -16,7 +16,7 @@ func AllUser() ([]models.User, error) {
 	if db.RowsAffected == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
-	return users, nil
+	return users, db.Error
 }
 
 func FindUser(id int) (*models.User, error) {
@@ -26,7 +26,7 @@ func FindUser(id int) (*models.User, error) {
 	if db.RowsAffected == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
-	return u, nil
+	return u, db.Error
 }
 
 func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
@@ -41,7 +41,7 @@ func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
 	u := new(models.User)
 	bindUser(u, ru)
 	db = db.Create(u)
-	return u, nil
+	return u, db.Error
 }
 
 func UpdateUser(ru *models.ReceiveUser, id int) error {
@@ -60,20 +60,18 @@ func UpdateUser(ru *models.ReceiveUser, id int) error {
 	fmt.Println(u)
 	if db.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
-	} else if db.Error != nil {
-		return db.Error
 	}
-	return nil
+	return db.Error
 }
 
 func DestroyUser(id int) error {
 	u := new(models.User)
 	db := database.DB()
-	db = db.Delete(u, id)
+	db = db.Debug().Delete(u, id)
 	if db.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	}
-	return nil
+	return db.Error
 }
 
 func hashPassword(pass string) (string, error) {
