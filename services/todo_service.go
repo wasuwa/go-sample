@@ -26,8 +26,6 @@ func FindUser(id int) (*models.User, error) {
 }
 
 func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
-	db := database.DB()
-	u := new(models.User)
 	if ru.Password != "" {
 		var err error
 		ru.Password, err = hashPassword(ru.Password)
@@ -35,8 +33,30 @@ func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
 			return nil, err
 		}
 	}
+	db := database.DB()
+	u := new(models.User)
 	bindUser(u, ru)
 	db = db.Create(u)
+	return u, db.Error
+}
+
+func UpdateUser(ru *models.ReceiveUser, id int) (*models.User, error) {
+	if ru.Password != "" {
+		var err error
+		ru.Password, err = hashPassword(ru.Password)
+		if err != nil {
+			return nil, err
+		}
+	}
+	db := database.DB()
+	u := new(models.User)
+	bindUser(u, ru)
+	db = db.Where("id = ?", id).Updates(u)
+	if db.Error != nil {
+		return nil, db.Error
+	} else if db.RowsAffected == 0 {
+		return nil, notFoundError()
+	}
 	return u, db.Error
 }
 
