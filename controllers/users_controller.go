@@ -79,11 +79,13 @@ func DestroyUser(c echo.Context) error {
 	var u models.User
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 	err = u.Destroy(id)
-	if err != nil {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	} else if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusNoContent, nil)
 }

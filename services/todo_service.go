@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"twitter-app/database"
 	"twitter-app/models"
 
@@ -55,9 +54,7 @@ func UpdateUser(ru *models.ReceiveUser, id int) error {
 	db := database.DB()
 	u := new(models.User)
 	bindUser(u, ru)
-	fmt.Println(u)
 	db = db.Where("id = ?", id).Updates(u)
-	fmt.Println(u)
 	if db.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	}
