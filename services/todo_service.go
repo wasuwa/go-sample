@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"twitter-app/database"
 	"twitter-app/models"
 
@@ -15,8 +14,10 @@ func AllUser() ([]models.User, error) {
 	db = db.Find(&users)
 	if db.RowsAffected == 0 {
 		return nil, gorm.ErrRecordNotFound
+	} else if db.Error != nil {
+		return nil, db.Error
 	}
-	return users, db.Error
+	return users, nil
 }
 
 func FindUser(id int) (*models.User, error) {
@@ -25,8 +26,10 @@ func FindUser(id int) (*models.User, error) {
 	db = db.Where("id = ?", id).Find(u)
 	if db.RowsAffected == 0 {
 		return nil, gorm.ErrRecordNotFound
+	} else if db.Error != nil {
+		return nil, db.Error
 	}
-	return u, db.Error
+	return u, nil
 }
 
 func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
@@ -40,10 +43,11 @@ func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
 	db := database.DB()
 	u := new(models.User)
 	bindUser(u, ru)
-	fmt.Println(u)
 	db = db.Create(u)
-	fmt.Println(u)
-	return u, db.Error
+	if db.Error != nil {
+		return nil, db.Error
+	}
+	return u, nil
 }
 
 func UpdateUser(ru *models.ReceiveUser, id int) error {
@@ -60,8 +64,10 @@ func UpdateUser(ru *models.ReceiveUser, id int) error {
 	db = db.Where("id = ?", id).Updates(u)
 	if db.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
+	}  else if db.Error != nil {
+		return db.Error
 	}
-	return db.Error
+	return nil
 }
 
 func DestroyUser(id int) error {
@@ -70,8 +76,10 @@ func DestroyUser(id int) error {
 	db = db.Debug().Delete(u, id)
 	if db.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
+	} else if db.Error != nil {
+		return db.Error
 	}
-	return db.Error
+	return nil
 }
 
 func hashPassword(pass string) (string, error) {
