@@ -18,7 +18,7 @@ func IndexUser(c echo.Context) error {
 	} else if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, users)
+	return c.JSONPretty(http.StatusOK, users, " ")
 }
 
 func ShowUser(c echo.Context) error {
@@ -32,7 +32,7 @@ func ShowUser(c echo.Context) error {
 	} else if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, u)
+	return c.JSONPretty(http.StatusOK, u, " ")
 }
 
 func CreateUser(c echo.Context) error {
@@ -47,7 +47,7 @@ func CreateUser(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, u)
+	return c.JSONPretty(http.StatusCreated, u, " ")
 }
 
 func UpdateUser(c echo.Context) error {
