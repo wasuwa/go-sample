@@ -22,9 +22,7 @@ func Router() (e *echo.Echo) {
 
 	e.GET("/users", controllers.IndexUser)
 	e.GET("/users/:id", controllers.ShowUser)
-	// e.GET("/users/new", controllers.New)
 	e.POST("/users", controllers.CreateUser)
-	// e.GET("/users/:id/edit", controllers.Edit)
 	e.PATCH("/users/:id", controllers.UpdateUser)
 	e.DELETE("/users/:id", controllers.DestroyUser)
 
