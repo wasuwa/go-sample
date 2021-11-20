@@ -14,6 +14,9 @@ func Router() (e *echo.Echo) {
 	e.Pre(middleware.RemoveTrailingSlash())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
+		ContentTypeNosniff: "application/json",
+	}))
 
 	e.Validator = mw.NewValidator()
 
