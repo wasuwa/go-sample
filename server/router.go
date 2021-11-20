@@ -2,5 +2,5 @@ package server
 
 func Init() {
 	e := Router()
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":8080"))
 }
