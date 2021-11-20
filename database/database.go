@@ -28,7 +28,7 @@ func Close() {
 }
 
 func SetupTestDB() (*gorm.DB, func()) {
-	config.Init("../config/environments/", "test")
+	config.Init("test")
 	Init()
 	db = db.Begin()
 	return db, func() {
