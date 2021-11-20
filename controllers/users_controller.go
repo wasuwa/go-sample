@@ -37,12 +37,10 @@ func ShowUser(c echo.Context) error {
 
 func CreateUser(c echo.Context) error {
 	ru := new(models.ReceiveUser)
-	err := c.Bind(ru)
-	if err != nil {
+	if err := c.Bind(ru); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	err = c.Validate(ru)
-	if err != nil {
+	if err := c.Validate(ru); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	u, err := services.CreateUser(ru)
@@ -58,16 +56,13 @@ func UpdateUser(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	err = c.Bind(ru)
-	if err != nil {
+	if err = c.Bind(ru); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	err = c.Validate(ru)
-	if err != nil {
+	if err = c.Validate(ru); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	err = services.UpdateUser(ru, id)
-	if errors.Is(err, gorm.ErrRecordNotFound) {
+	if err = services.UpdateUser(ru, id); errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	} else if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -80,8 +75,7 @@ func DestroyUser(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	err = services.DestroyUser(id)
-	if errors.Is(err, gorm.ErrRecordNotFound) {
+	if err = services.DestroyUser(id); errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	} else if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
