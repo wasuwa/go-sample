@@ -1,91 +1,97 @@
 package controllers_test
 
 import (
-	// "fmt"
+	"fmt"
 	"net/http"
-	// "net/http/httptest"
+	"net/http/httptest"
+
 	// "strconv"
 
 	// "strings"
 
 	"testing"
-	// "twitter-app/controllers"
+	"twitter-app/config"
+	"twitter-app/controllers"
 	"twitter-app/database"
-	// "twitter-app/models"
-	// "twitter-app/server"
 
-	// "github.com/labstack/echo/v4"
+	"twitter-app/models"
+	"twitter-app/server"
+
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	// "gorm.io/gorm"
 )
 
-// var (
-// 	user = &models.User{
-// 		ID:       0,
-// 		Name:     "takada",
-// 		Email:    "god@example.com",
-// 		Password: "kenshi",
-// 	}
-// 	testcases = []struct {
-// 		name    string
-// 		input   string
-// 		wantErr bool
-// 	}{
-// 		{
-// 			"正しく通ること",
-// 			`{"name":"mokou","email":"mokou@example.com","password":"orange"}`,
-// 			false,
-// 		},
-// 		{
-// 			"パスワードが6文字以上の制限でエラーが返ること",
-// 			`{"name":"mokou","email":"mokou@example.com","password":"apple"}`,
-// 			true,
-// 		},
-// 		{
-// 			"名前は15文字以下の制限でエラーが返ること",
-// 			fmt.Sprintf(`{"name":"%s","email":"mokou@example.com","password":"orange"}`, strings.Repeat("mokou", 4)),
-// 			true,
-// 		},
-// 		{
-// 			"メールアドレスは256文字以下の制限でエラーが返ること",
-// 			fmt.Sprintf(`{"name":"mokou","email":"%s","password":"orange"}`, strings.Repeat("mokou", 49)+"@example.com"),
-// 			true,
-// 		},
-// 		{
-// 			"メールアドレスのフォーマットでエラーが返ること",
-// 			`{"name":"mokou","email":"examplecom","password":"orange"}`,
-// 			true,
-// 		},
-// 		{
-// 			"名前は必須の制限でエラーが返ること",
-// 			`{"email":"mokou@example.com","password":"orange"}`,
-// 			true,
-// 		},
-// 		{
-// 			"メールアドレスは必須の制限でエラーが返ること",
-// 			`{"name":"mokou","password":"orange"}`,
-// 			true,
-// 		},
-// 		{
-// 			"パスワードは必須の制限でエラーが返ること",
-// 			`{"name":"mokou","email":"mokou@example.com"}`,
-// 			true,
-// 		},
-// 	}
-// )
+var (
+	user = &models.User{
+		Name:     "takada",
+		Email:    "god@example.com",
+		Password: "kenshi",
+	}
+	// testcases = []struct {
+	// 	name    string
+	// 	input   string
+	// 	wantErr bool
+	// }{
+	// 	{
+	// 		"正しく通ること",
+	// 		`{"name":"mokou","email":"mokou@example.com","password":"orange"}`,
+	// 		false,
+	// 	},
+	// 	{
+	// 		"パスワードが6文字以上の制限でエラーが返ること",
+	// 		`{"name":"mokou","email":"mokou@example.com","password":"apple"}`,
+	// 		true,
+	// 	},
+	// 	{
+	// 		"名前は15文字以下の制限でエラーが返ること",
+	// 		fmt.Sprintf(`{"name":"%s","email":"mokou@example.com","password":"orange"}`, strings.Repeat("mokou", 4)),
+	// 		true,
+	// 	},
+	// 	{
+	// 		"メールアドレスは256文字以下の制限でエラーが返ること",
+	// 		fmt.Sprintf(`{"name":"mokou","email":"%s","password":"orange"}`, strings.Repeat("mokou", 49)+"@example.com"),
+	// 		true,
+	// 	},
+	// 	{
+	// 		"メールアドレスのフォーマットでエラーが返ること",
+	// 		`{"name":"mokou","email":"examplecom","password":"orange"}`,
+	// 		true,
+	// 	},
+	// 	{
+	// 		"名前は必須の制限でエラーが返ること",
+	// 		`{"email":"mokou@example.com","password":"orange"}`,
+	// 		true,
+	// 	},
+	// 	{
+	// 		"メールアドレスは必須の制限でエラーが返ること",
+	// 		`{"name":"mokou","password":"orange"}`,
+	// 		true,
+	// 	},
+	// 	{
+	// 		"パスワードは必須の制限でエラーが返ること",
+	// 		`{"name":"mokou","email":"mokou@example.com"}`,
+	// 		true,
+	// 	},
+	// }
+)
 
 func TestIndexUser(t *testing.T) {
 	assert := assert.New(t)
-	_, teardown := database.SetupTestDB()
+	config.ResetPath()
+	db, teardown := database.SetupTestDB()
 	defer teardown()
 
-	// db.Create(user)
-	// e := server.Router()
-	// req := httptest.NewRequest(http.MethodGet, "/users", nil)
-	// req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	// rec := httptest.NewRecorder()
-	// c := e.NewContext(req, rec)
+	db.Create(user)
+	e := server.Router()
+	req := httptest.NewRequest(http.MethodGet, "/users", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
 
-	// assert.NoError(controllers.IndexUser(c))
+	fmt.Println(user)
+
+	assert.NoError(controllers.IndexUser(c))
 	assert.Equal(http.StatusOK, 200)
 }
 
