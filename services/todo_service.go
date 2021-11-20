@@ -73,7 +73,7 @@ func UpdateUser(ru *models.ReceiveUser, id int) error {
 func DestroyUser(id int) error {
 	u := new(models.User)
 	db := database.DB()
-	db = db.Debug().Delete(u, id)
+	db = db.Delete(u, id)
 	if db.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
 	} else if db.Error != nil {
