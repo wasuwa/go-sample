@@ -73,9 +73,12 @@ var (
 	}
 )
 
+func init() {
+	config.ResetPath()
+}
+
 func TestIndexUser(t *testing.T) {
 	assert := assert.New(t)
-	config.ResetPath()
 	db, teardown := database.SetupTestDB()
 	defer teardown()
 
