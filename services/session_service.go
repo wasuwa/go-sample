@@ -5,12 +5,12 @@ import (
 	"twitter-app/models"
 )
 
-func SearchUser(ru *models.ReceiveUser) error {
+func SearchUser(ru *models.ReceiveUser) (*models.User, error) {
 	db := database.DB()
-	u  := new(models.User)
+	u := new(models.User)
 	db = db.Where("email = ?", ru.Email).Take(u)
 	if db.Error != nil {
-		return db.Error
+		return nil, db.Error
 	}
-	return nil
+	return u, nil
 }
