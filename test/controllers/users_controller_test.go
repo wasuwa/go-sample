@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"time"
-	// "strconv"
+	"strconv"
 	"strings"
 
 	"testing"
@@ -96,6 +96,27 @@ func TestIndexUser(t *testing.T) {
 	assert.Equal(http.StatusOK, rec.Code)
 }
 
+func TestShowUser(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := database.SetupTestDB()
+	defer teardown()
+
+	e := server.Router()
+	req := httptest.NewRequest(http.MethodGet, "/users/:id", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	c.SetParamNames("id")
+	c.SetParamValues("test")
+	db.Create(user)
+	assert.Error(controllers.ShowUser(c))
+
+	id := strconv.Itoa(int(user.ID))
+	c.SetParamValues(id)
+	assert.NoError(controllers.ShowUser(c))
+	assert.Equal(http.StatusOK, rec.Code)
+}
+
 func TestCreateUser(t *testing.T) {
 	assert := assert.New(t)
 	_, teardown := database.SetupTestDB()
@@ -117,25 +138,6 @@ func TestCreateUser(t *testing.T) {
 		})
 	}
 }
-
-// func TestShowUser(t *testing.T) {
-// 	assert := assert.New(t)
-// 	db, teardown := database.SetupTestDB()
-// 	defer teardown()
-
-// 	db.Create(user)
-// 	id := strconv.Itoa(int(user.ID))
-// 	e := server.Router()
-// 	req := httptest.NewRequest(http.MethodGet, "/users/:id", nil)
-// 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 	rec := httptest.NewRecorder()
-// 	c := e.NewContext(req, rec)
-// 	c.SetParamNames("id")
-// 	c.SetParamValues(id)
-
-// 	assert.NoError(controllers.ShowUser(c))
-// 	assert.Equal(http.StatusOK, rec.Code)
-// }
 
 // func TestUpdateUser(t *testing.T) {
 // 	assert := assert.New(t)
