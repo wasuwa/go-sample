@@ -112,3 +112,15 @@ func TestUpdate(t *testing.T) {
 	id := int(user.ID)
 	assert.NoError(services.UpdateUser(testcases[0].input, id))
 }
+
+func TestDestroy(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := database.SetupTestDB()
+	defer teardown()
+
+	assert.Error(services.DestroyUser(0))
+
+	db.Create(user)
+	id := int(user.ID)
+	assert.NoError(services.DestroyUser(id))
+}
