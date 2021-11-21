@@ -5,7 +5,6 @@ type User struct {
 	Name          string `json:"name"`
 	Email         string `json:"email" gorm:"unique"`
 	Password      string `json:"password"`
-	RememberToken string `json:"rememberToken"`
 }
 
 type ReceiveUser struct {

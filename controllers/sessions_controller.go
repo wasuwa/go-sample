@@ -17,7 +17,6 @@ func Login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	u, err := services.SearchUser(ru)
-	println(u.Password)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	} else if err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(ru.Password)); err != nil {
