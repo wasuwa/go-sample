@@ -53,7 +53,7 @@ func init() {
 	config.ResetPath()
 }
 
-func TestAll(t *testing.T) {
+func TestAllUser(t *testing.T) {
 	assert := assert.New(t)
 	db, teardown := database.SetupTestDB()
 	defer teardown()
@@ -68,7 +68,7 @@ func TestAll(t *testing.T) {
 	assert.NoError(err)
 }
 
-func TestFind(t *testing.T) {
+func TestFindUser(t *testing.T) {
 	assert := assert.New(t)
 	db, teardown := database.SetupTestDB()
 	defer teardown()
@@ -84,7 +84,7 @@ func TestFind(t *testing.T) {
 	assert.NoError(err)
 }
 
-func TestCreate(t *testing.T) {
+func TestCreateUser(t *testing.T) {
 	assert := assert.New(t)
 	_, teardown := database.SetupTestDB()
 	defer teardown()
