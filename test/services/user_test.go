@@ -103,25 +103,12 @@ func TestCreateUser(t *testing.T) {
 	}
 }
 
-// func TestUpdate(t *testing.T) {
-// 	assert := assert.New(t)
-// 	db, teardown := database.SetupTestDB()
-// 	defer teardown()
+func TestUpdate(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := database.SetupTestDB()
+	defer teardown()
 
-// 	db.Create(user)
-// 	user.ID    = 0
-// 	user.Email = "god@example.com"
-// 	db.Create(user)
-// 	id := int(user.ID)
-
-// 	for _, tc := range testcases {
-// 		t.Run(tc.name, func(t *testing.T) {
-// 			err := services.UpdateUser(tc.input, id)
-// 			if tc.wantErr {
-// 				assert.Error(err)
-// 			} else {
-// 				assert.NoError(err)
-// 			}
-// 		})
-// 	}
-// }
+	db.Create(user)
+	id := int(user.ID)
+	assert.NoError(services.UpdateUser(testcases[0].input, id))
+}
