@@ -7,6 +7,7 @@ import (
 	"twitter-app/models"
 	"twitter-app/services"
 
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -74,6 +75,13 @@ func DestroyUser(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+	sess, err := session.Get("session", c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if sess.Values["user_id"] != uint(id) {
+		return echo.NewHTTPError(http.StatusUnauthorized, errors.New("l").Error())
 	}
 	if err = services.DestroyUser(id); errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())

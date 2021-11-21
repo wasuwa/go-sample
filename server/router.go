@@ -4,6 +4,8 @@ import (
 	"twitter-app/controllers"
 	mw "twitter-app/middleware"
 
+	"github.com/gorilla/sessions"
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -17,6 +19,7 @@ func Router() (e *echo.Echo) {
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
 		ContentTypeNosniff: "application/json",
 	}))
+	e.Use(session.Middleware(sessions.NewCookieStore([]byte("secret"))))
 
 	e.Validator = mw.NewValidator()
 
