@@ -29,7 +29,7 @@ func Router() (e *echo.Echo) {
 
 	// sessions
 	e.POST("/login", controllers.Login)
-	// e.DELETE("/logout", controllers.Logout)
+	e.DELETE("/logout", controllers.Logout)
 
 	return
 }
