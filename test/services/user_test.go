@@ -31,9 +31,9 @@ var (
 		{
 			"正しく通ること",
 			&models.ReceiveUser{
-				Name:     "takada",
-				Email:    "god@example.com",
-				Password: "kenshi",
+				Name:     "mokou",
+				Email:    "baba@example.com",
+				Password: "yutaka",
 			},
 			false,
 		},
@@ -41,7 +41,7 @@ var (
 			"emailの重複でエラーが発生すること",
 			&models.ReceiveUser{
 				Name:     "mokou",
-				Email:    "god@example.com",
+				Email:    "baba@example.com",
 				Password: "yutaka",
 			},
 			true,
@@ -109,14 +109,14 @@ func TestCreateUser(t *testing.T) {
 // 	defer teardown()
 
 // 	db.Create(user)
-// 	id := int(user.ID)
-
-// 	user.Email = "mokou@example.com"
+// 	user.ID    = 0
+// 	user.Email = "god@example.com"
 // 	db.Create(user)
+// 	id := int(user.ID)
 
 // 	for _, tc := range testcases {
 // 		t.Run(tc.name, func(t *testing.T) {
-// 			err := tc.input.Update(id)
+// 			err := services.UpdateUser(tc.input, id)
 // 			if tc.wantErr {
 // 				assert.Error(err)
 // 			} else {
