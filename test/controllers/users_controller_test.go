@@ -139,31 +139,31 @@ func TestCreateUser(t *testing.T) {
 	}
 }
 
-// func TestUpdateUser(t *testing.T) {
-// 	assert := assert.New(t)
-// 	db, teardown := database.SetupTestDB()
-// 	defer teardown()
+func TestUpdateUser(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := database.SetupTestDB()
+	defer teardown()
 
-// 	db.Create(user)
-// 	id := strconv.Itoa(int(user.ID))
-// 	e := server.Router()
-// 	for _, tc := range testcases {
-// 		t.Run(tc.name, func(t *testing.T) {
-// 			req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(tc.input))
-// 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-// 			rec := httptest.NewRecorder()
-// 			c := e.NewContext(req, rec)
-// 			c.SetParamNames("id")
-// 			c.SetParamValues(id)
-// 			if err := controllers.UpdateUser(c); tc.wantErr {
-// 				assert.Error(err)
-// 			} else {
-// 				assert.NoError(err)
-// 				assert.Equal(http.StatusNoContent, rec.Code)
-// 			}
-// 		})
-// 	}
-// }
+	db.Create(user)
+	id := strconv.Itoa(int(user.ID))
+	e := server.Router()
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(tc.input))
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			c := e.NewContext(req, rec)
+			c.SetParamNames("id")
+			c.SetParamValues(id)
+			if err := controllers.UpdateUser(c); tc.wantErr {
+				assert.Error(err)
+			} else {
+				assert.NoError(err)
+				assert.Equal(http.StatusNoContent, rec.Code)
+			}
+		})
+	}
+}
 
 // func TestDestroyUser(t *testing.T) {
 // 	assert := assert.New(t)
