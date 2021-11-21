@@ -21,7 +21,8 @@ func Login(c echo.Context) error {
 	} else if u.Password != ru.Password {
 		return echo.NewHTTPError(http.StatusBadRequest, errors.New("password is incorrect").Error())
 	}
-	return nil
+	// ログイン処理をする
+	return c.JSONPretty(http.StatusCreated, u, " ")
 }
 
 func Logout(c echo.Context) error {
