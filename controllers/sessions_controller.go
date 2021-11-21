@@ -24,7 +24,7 @@ func Login(c echo.Context) error {
 	}
 	// TODO: ログイン処理をする
 	if err := services.Login(u, c); err != nil {
-
+		
 	}
 	// TODO: user{}ではなく、sessionの情報を返すべき
 	return c.JSONPretty(http.StatusCreated, u, " ")
