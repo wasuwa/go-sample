@@ -18,3 +18,12 @@ func SearchUser(ru *models.ReceiveUser) (*models.User, error) {
 	}
 	return u, nil
 }
+
+// func Login(u *models.User) error {
+// 	// セッション（User.ID）を発行する
+// 	return nil
+// }
+
+// func IsLoggedin() bool {
+// 	return true
+// }
