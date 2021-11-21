@@ -4,6 +4,8 @@ import (
 	"twitter-app/database"
 	"twitter-app/models"
 
+	"github.com/labstack/echo-contrib/session"
+	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
@@ -19,8 +21,15 @@ func SearchUser(ru *models.ReceiveUser) (*models.User, error) {
 	return u, nil
 }
 
-func Login(u *models.User) error {
-	
+func Login(u *models.User, c echo.Context) error {
+	sess, err := session.Get("session", c)
+	if err != nil {
+		return err
+	}
+	sess.Values["user_id"] = u.ID
+	if err = sess.Save(c.Request(), c.Response()); err != nil {
+		return err
+	}
 	return nil
 }
 

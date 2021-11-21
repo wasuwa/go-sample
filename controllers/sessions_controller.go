@@ -23,9 +23,9 @@ func Login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, errors.New("password is incorrect").Error())
 	}
 	// TODO: ログイン処理をする
-	// if err := services.Login(u); err != nil {
+	if err := services.Login(u, c); err != nil {
 
-	// }
+	}
 	// TODO: user{}ではなく、sessionの情報を返すべき
 	return c.JSONPretty(http.StatusCreated, u, " ")
 }
