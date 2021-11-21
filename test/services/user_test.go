@@ -71,6 +71,22 @@ func TestAll(t *testing.T) {
 	assert.NoError(err)
 }
 
+func TestFind(t *testing.T) {
+	assert := assert.New(t)
+	db, teardown := database.SetupTestDB()
+	defer teardown()
+
+	u, err := services.FindUser(0)
+	assert.Nil(u)
+	assert.Error(err)
+
+	db.Create(user)
+	id := int(user.ID)
+	u, err = services.FindUser(id)
+	assert.Equal(user, u)
+	assert.NoError(err)
+}
+
 // func TestCreate(t *testing.T) {
 // 	assert := assert.New(t)
 // 	db, teardown := database.SetupTestDB()
@@ -94,27 +110,6 @@ func TestAll(t *testing.T) {
 // 			}
 // 		})
 // 	}
-// }
-
-// func TestFind(t *testing.T) {
-// 	assert := assert.New(t)
-// 	db, teardown := database.SetupTestDB()
-// 	defer teardown()
-
-// 	db.Create(user)
-// 	id := int(user.ID)
-
-// 	var (
-// 		u2 models.User
-// 		u3 models.User
-// 	)
-
-// 	err := u2.Find(id)
-// 	assert.Equal(id, int(u2.ID))
-// 	assert.NoError(err)
-
-// 	err = u3.Find(0)
-// 	assert.Error(err)
 // }
 
 // func TestUpdate(t *testing.T) {
