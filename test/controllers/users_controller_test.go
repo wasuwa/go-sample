@@ -1,9 +1,10 @@
 package controllers_test
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 	"net/http/httptest"
+	"time"
 
 	// "strconv"
 
@@ -17,12 +18,18 @@ import (
 	"twitter-app/models"
 	"twitter-app/server"
 
-	"github.com/labstack/echo/v4"
+	// "github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	// "gorm.io/gorm"
 )
 
 var (
+	t time.Time
+	base = &models.Base {
+		ID: 0,
+		CreatedAt: t,
+		UpdatedAt: t,
+	}
 	user = &models.User{
 		Name:     "takada",
 		Email:    "god@example.com",
@@ -82,17 +89,15 @@ func TestIndexUser(t *testing.T) {
 	db, teardown := database.SetupTestDB()
 	defer teardown()
 
-	db.Create(user)
 	e := server.Router()
 	req := httptest.NewRequest(http.MethodGet, "/users", nil)
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	fmt.Println(user)
-
+	assert.Error(controllers.IndexUser(c))
+	db.Create(user)
 	assert.NoError(controllers.IndexUser(c))
-	assert.Equal(http.StatusOK, 200)
+	assert.Equal(http.StatusOK, rec.Code)
 }
 
 // func TestCreateUser(t *testing.T) {
