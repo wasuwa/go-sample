@@ -19,7 +19,7 @@ func Login(c echo.Context) error {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	} else if u.Password != ru.Password {
-		return echo.NewHTTPError(http.StatusBadRequest, errors.New("password is incorrect"))
+		return echo.NewHTTPError(http.StatusBadRequest, errors.New("password is incorrect").Error())
 	}
 	return nil
 }
