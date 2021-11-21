@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"time"
 	"strconv"
 	"strings"
 
@@ -20,12 +19,7 @@ import (
 )
 
 var (
-	t time.Time
-	base = &models.Base {
-		ID: 0,
-		CreatedAt: t,
-		UpdatedAt: t,
-	}
+	base = &models.Base{ID: 0}
 	user = &models.User{
 		Name:     "takada",
 		Email:    "god@example.com",
