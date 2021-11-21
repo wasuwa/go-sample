@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	t time.Time
-	base = &models.Base {
-		ID: 0,
+	t    time.Time
+	base = &models.Base{
+		ID:        0,
 		CreatedAt: t,
 		UpdatedAt: t,
 	}
@@ -25,30 +25,27 @@ var (
 	}
 	testcases = []struct {
 		name    string
-		input   *models.User
+		input   *models.ReceiveUser
 		wantErr bool
 	}{
 		{
 			"正しく通ること",
-			&models.User{
-				Name:      "takada",
-				Email:     "god@example.com",
-				Password:  "kenshi",
+			&models.ReceiveUser{
+				Name:     "takada",
+				Email:    "god@example.com",
+				Password: "kenshi",
 			},
 			false,
 		},
-		// {
-		// 	"emailの重複でエラーが発生すること",
-		// 	&models.User{
-		// 		ID:        0,
-		// 		Name:      "mokou",
-		// 		Email:     "god@example.com",
-		// 		Password:  "yutaka",
-		// 		CreatedAt: t,
-		// 		UpdatedAt: t,
-		// 	},
-		// 	true,
-		// },
+		{
+			"emailの重複でエラーが発生すること",
+			&models.ReceiveUser{
+				Name:     "mokou",
+				Email:    "god@example.com",
+				Password: "yutaka",
+			},
+			true,
+		},
 	}
 )
 
@@ -87,30 +84,24 @@ func TestFind(t *testing.T) {
 	assert.NoError(err)
 }
 
-// func TestCreate(t *testing.T) {
-// 	assert := assert.New(t)
-// 	db, teardown := database.SetupTestDB()
-// 	defer teardown()
+func TestCreate(t *testing.T) {
+	assert := assert.New(t)
+	_, teardown := database.SetupTestDB()
+	defer teardown()
 
-// 	var (
-// 		c int64
-// 		i int64 = 1
-// 	)
-// 	for _, tc := range testcases {
-// 		t.Run(tc.name, func(t *testing.T) {
-// 			u := tc.input
-// 			err := u.Create()
-// 			db.Find(u).Count(&c)
-// 			if tc.wantErr {
-// 				assert.NotEqual(i, c)
-// 				assert.Error(err)
-// 			} else {
-// 				assert.Equal(i, c)
-// 				assert.NoError(err)
-// 			}
-// 		})
-// 	}
-// }
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			u, err := services.CreateUser(tc.input)
+			if tc.wantErr {
+				assert.Nil(u)
+				assert.Error(err)
+			} else {
+				assert.Equal(tc.input.Name, u.Name)
+				assert.NoError(err)
+			}
+		})
+	}
+}
 
 // func TestUpdate(t *testing.T) {
 // 	assert := assert.New(t)
