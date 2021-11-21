@@ -13,10 +13,11 @@ func Login(c echo.Context) error {
 	if err := c.Bind(ru); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	if err := services.SearchUser(ru); err != nil {
+	if err := services.SearchUser(ru); err == nil {
+		return nil
+	} else {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	return nil
 }
 
 func Logout(c echo.Context) error {
