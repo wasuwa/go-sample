@@ -20,11 +20,16 @@ func Router() (e *echo.Echo) {
 
 	e.Validator = mw.NewValidator()
 
+	// users
 	e.GET("/users", controllers.IndexUser)
 	e.GET("/users/:id", controllers.ShowUser)
 	e.POST("/users", controllers.CreateUser)
 	e.PATCH("/users/:id", controllers.UpdateUser)
 	e.DELETE("/users/:id", controllers.DestroyUser)
+
+	// sessions
+	e.POST("/login", controllers.Login)
+	// e.DELETE("/logout", controllers.Logout)
 
 	return
 }
