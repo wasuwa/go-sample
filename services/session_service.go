@@ -38,6 +38,14 @@ func Login(u *models.User, c echo.Context) error {
 	return nil
 }
 
-// func IsLoggedin() bool {
-// 	return true
-// }
+func IsLoggedin(s *sessions.Session, id int) bool {
+	if s.Values["user_id"] == uint(id) {
+		return true
+	}
+	return false
+}
+
+func ClearSession(c echo.Context) {
+	sessions.Session.Options = &sessions.Options{MaxAge: -1}
+	// session.Save(c.Request(), c.Response())
+}

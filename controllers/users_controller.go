@@ -57,6 +57,13 @@ func UpdateUser(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
+	sess, err := session.Get("session", c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if !services.IsLoggedin(sess, id) {
+		return echo.NewHTTPError(http.StatusUnauthorized, errors.New("login required").Error())
+	}
 	if err = c.Bind(ru); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
@@ -80,8 +87,8 @@ func DestroyUser(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	if sess.Values["user_id"] != uint(id) {
-		return echo.NewHTTPError(http.StatusUnauthorized, errors.New("l").Error())
+	if !services.IsLoggedin(sess, id) {
+		return echo.NewHTTPError(http.StatusUnauthorized, errors.New("login required").Error())
 	}
 	if err = services.DestroyUser(id); errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
