@@ -25,7 +25,7 @@ var (
 		Email:    "god@example.com",
 		Password: "kenshi",
 	}
-	testcases = []struct {
+	tests = []struct {
 		name    string
 		input   string
 		wantErr bool
@@ -87,10 +87,14 @@ func TestIndexUser(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	assert.Error(controllers.IndexUser(c))
-	db.Create(user)
-	assert.NoError(controllers.IndexUser(c))
-	assert.Equal(http.StatusOK, rec.Code)
+	t.Run("ユーザーが見つからずエラーが返ること", func(t *testing.T) {
+		assert.Error(controllers.IndexUser(c))
+	})
+	t.Run("正しく通ること", func(t *testing.T) {
+		db.Create(user)
+		assert.NoError(controllers.IndexUser(c))
+		assert.Equal(http.StatusOK, rec.Code)
+	})
 }
 
 func TestShowUser(t *testing.T) {
@@ -102,16 +106,19 @@ func TestShowUser(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/users/:id", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-
 	c.SetParamNames("id")
-	c.SetParamValues("test")
 	db.Create(user)
-	assert.Error(controllers.ShowUser(c))
 
-	id := strconv.Itoa(int(user.ID))
-	c.SetParamValues(id)
-	assert.NoError(controllers.ShowUser(c))
-	assert.Equal(http.StatusOK, rec.Code)
+	t.Run("パラメーターが不正でエラーが返ること", func(t *testing.T) {
+		c.SetParamValues("test")
+		assert.Error(controllers.ShowUser(c))
+	})
+	t.Run("正しく通ること", func(t *testing.T) {
+		id := strconv.Itoa(int(user.ID))
+		c.SetParamValues(id)
+		assert.NoError(controllers.ShowUser(c))
+		assert.Equal(http.StatusOK, rec.Code)
+	})
 }
 
 func TestCreateUser(t *testing.T) {
@@ -120,7 +127,7 @@ func TestCreateUser(t *testing.T) {
 	defer teardown()
 
 	e := server.Router()
-	for _, tc := range testcases {
+	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodPost, "/users", strings.NewReader(tc.input))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -144,7 +151,7 @@ func TestUpdateUser(t *testing.T) {
 	db.Create(user)
 	id := strconv.Itoa(int(user.ID))
 	e := server.Router()
-	for _, tc := range testcases {
+	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			req := httptest.NewRequest(http.MethodPatch, "/users/:id", strings.NewReader(tc.input))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
