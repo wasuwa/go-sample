@@ -23,16 +23,16 @@ func SearchUser(ru *models.ReceiveUser) (*models.User, error) {
 }
 
 func Login(u *models.User, c echo.Context) error {
-	sess, err := session.Get("session", c)
+	s, err := session.Get("session", c)
 	if err != nil {
 		return err
 	}
-	sess.Options = &sessions.Options{
+	s.Options = &sessions.Options{
 		MaxAge:   86400 * 7,
 		HttpOnly: true,
 	}
-	sess.Values["user_id"] = u.ID
-	if err = sess.Save(c.Request(), c.Response()); err != nil {
+	s.Values["user_id"] = u.ID
+	if err = s.Save(c.Request(), c.Response()); err != nil {
 		return err
 	}
 	return nil
@@ -45,7 +45,7 @@ func IsLoggedin(s *sessions.Session, id int) bool {
 	return false
 }
 
-func ClearSession(c echo.Context) {
-	sessions.Session.Options = &sessions.Options{MaxAge: -1}
-	// session.Save(c.Request(), c.Response())
+func ClearSession(c echo.Context, s *sessions.Session) {
+	s.Options = &sessions.Options{MaxAge: -1, Path: "/"}
+	s.Save(c.Request(), c.Response())
 }
