@@ -95,6 +95,8 @@ func DestroyUser(c echo.Context) error {
 	} else if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	services.ClearSession(c, s)
+	if err = services.ClearSession(c, s); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
 	return c.JSON(http.StatusNoContent, nil)
 }

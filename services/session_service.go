@@ -45,7 +45,10 @@ func IsLoggedin(s *sessions.Session, id int) bool {
 	return false
 }
 
-func ClearSession(c echo.Context, s *sessions.Session) {
+func ClearSession(c echo.Context, s *sessions.Session) error {
 	s.Options = &sessions.Options{MaxAge: -1, Path: "/"}
-	s.Save(c.Request(), c.Response())
+	if err := s.Save(c.Request(), c.Response()); err != nil {
+		return err
+	}
+	return nil
 }

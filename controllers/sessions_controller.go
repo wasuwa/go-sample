@@ -6,6 +6,7 @@ import (
 	"twitter-app/models"
 	"twitter-app/services"
 
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -29,5 +30,12 @@ func Login(c echo.Context) error {
 }
 
 func Logout(c echo.Context) error {
-	return nil
+	s, err := session.Get("session", c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if err = services.ClearSession(c, s); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusNoContent, nil)
 }
