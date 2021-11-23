@@ -1,4 +1,4 @@
-package models_test
+package services_test
 
 import (
 	"testing"
