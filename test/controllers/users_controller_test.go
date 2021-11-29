@@ -90,7 +90,7 @@ func TestIndexUser(t *testing.T) {
 	t.Run("ユーザーが見つからずエラーが返ること", func(t *testing.T) {
 		assert.Error(controllers.IndexUser(c))
 	})
-	t.Run("正しく通ること", func(t *testing.T) {
+	t.Run("ユーザーを取得できること", func(t *testing.T) {
 		db.Create(user)
 		assert.NoError(controllers.IndexUser(c))
 		assert.Equal(http.StatusOK, rec.Code)
@@ -159,6 +159,7 @@ func TestUpdateUser(t *testing.T) {
 			c := e.NewContext(req, rec)
 			c.SetParamNames("id")
 			c.SetParamValues(id)
+			services.Login(user, c)
 			if err := controllers.UpdateUser(c); tc.wantErr {
 				assert.Error(err)
 			} else {
