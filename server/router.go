@@ -36,10 +36,10 @@ func Router() (e *echo.Echo) {
 	e.DELETE("/logout", controllers.Logout)
 
 	// tweet
-	e.GET("/users/tweets", controllers.IndexTweet)
-	e.GET("/users/tweets/:id", controllers.ShowTweet)
-	e.POST("/users/tweets", controllers.CreateTweet)
-	e.DELETE("/users/tweets", controllers.DestroyTweet)
+	e.GET("/users/:id/tweets", controllers.IndexTweet)
+	e.GET("/users/:id/tweets/:id", controllers.ShowTweet)
+	e.POST("/users/:id/tweets", controllers.CreateTweet)
+	e.DELETE("/users/:id/tweets", controllers.DestroyTweet)
 
 	return
 }
