@@ -7,10 +7,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func AllTweet() (*models.Tweet, error) {
+func AllTweet(id int) (*models.Tweet, error) {
 	db := database.DB()
 	t := new(models.Tweet)
-	db = db.Debug().Find(t)
+	db = db.Debug().Where("user_id = ?", id).Find(t)
 	if db.Error != nil {
 		return nil, db.Error
 	} else if db.RowsAffected == 0 {
