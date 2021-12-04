@@ -1,7 +1,6 @@
 package config
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/spf13/viper"
@@ -27,10 +26,10 @@ func Config() *viper.Viper {
 	return c
 }
 
-func ResetPath() {
-	path, err := filepath.Abs("../../")
-	if err != nil {
-		panic(err)
-	}
-	os.Chdir(path)
-}
+// func ResetPath() {
+// 	path, err := filepath.Abs("../../")
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	os.Chdir(path)
+// }
