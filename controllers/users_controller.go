@@ -13,13 +13,13 @@ import (
 )
 
 func IndexUser(c echo.Context) error {
-	users, err := services.AllUser()
+	uu, err := services.AllUser()
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	} else if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSONPretty(http.StatusOK, users, " ")
+	return c.JSONPretty(http.StatusOK, uu, " ")
 }
 
 func ShowUser(c echo.Context) error {

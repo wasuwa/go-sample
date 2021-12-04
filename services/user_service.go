@@ -8,16 +8,16 @@ import (
 	"gorm.io/gorm"
 )
 
-func AllUser() ([]models.User, error) {
+func AllUser() (*[]models.User, error) {
 	db := database.DB()
-	var users []models.User
-	db = db.Find(&users)
+	uu := new([]models.User)
+	db = db.Find(uu)
 	if db.Error != nil {
 		return nil, db.Error
 	} else if db.RowsAffected == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
-	return users, nil
+	return uu, nil
 }
 
 func FindUser(id int) (*models.User, error) {
