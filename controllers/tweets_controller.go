@@ -12,7 +12,6 @@ import (
 
 func IndexTweet(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("user_id"))
-	println(id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
