@@ -4,8 +4,10 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"twitter-app/models"
 	"twitter-app/services"
 
+	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -24,12 +26,30 @@ func IndexTweet(c echo.Context) error {
 	return c.JSONPretty(http.StatusOK, tt, " ")
 }
 
-func ShowTweet(c echo.Context) error {
-	return nil
-}
-
 func CreateTweet(c echo.Context) error {
-	return nil
+	id, err := strconv.Atoi(c.Param("user_id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+	s, err := session.Get("session", c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if !services.IsLoggedin(s, id) {
+		return echo.NewHTTPError(http.StatusUnauthorized, errors.New("login required").Error())
+	}
+	rt := new(models.ReceiveTweet)
+	if err := c.Bind(rt); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+	if err := c.Validate(rt); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+	t, err := services.CreateTweet(rt)
+	if err != nil {
+		return err
+	}
+	return c.JSONPretty(http.StatusCreated, t)
 }
 
 func DestroyTweet(c echo.Context) error {
