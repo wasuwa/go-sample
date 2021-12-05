@@ -2,9 +2,9 @@ package models
 
 type User struct {
 	Base
-	Name          string `json:"name"`
-	Email         string `json:"email" gorm:"unique"`
-	Password      string `json:"password"`
+	Name     string `json:"name"`
+	Email    string `json:"email" gorm:"unique"`
+	Password string `json:"password"`
 }
 
 type ReceiveUser struct {

@@ -60,7 +60,7 @@ func UpdateUser(ru *models.ReceiveUser, id int) error {
 	u := new(models.User)
 	bindUser(u, ru)
 	db = db.Where("id = ?", id).Updates(u)
-	 if db.Error != nil {
+	if db.Error != nil {
 		return db.Error
 	} else if db.RowsAffected == 0 {
 		return gorm.ErrRecordNotFound
@@ -86,7 +86,7 @@ func hashPassword(pass string) (string, error) {
 }
 
 func bindUser(u *models.User, ru *models.ReceiveUser) {
-	u.Name 		 = ru.Name
-	u.Email 	 = ru.Email
+	u.Name = ru.Name
+	u.Email = ru.Email
 	u.Password = ru.Password
 }
