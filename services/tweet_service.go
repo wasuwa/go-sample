@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func AllTweet(id int) (*[]models.Tweet, error) {
+func AllTweet(id int) (*models.ResponseTweet, error) {
 	db := database.DB()
 	tt := new([]models.Tweet)
 	db = db.Where("user_id = ?", id).Find(tt)
@@ -16,5 +16,7 @@ func AllTweet(id int) (*[]models.Tweet, error) {
 	} else if db.RowsAffected == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
-	return tt, nil
+	rt := new(models.ResponseTweet)
+	rt.Tweets = tt
+	return rt, nil
 }

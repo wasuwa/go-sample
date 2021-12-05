@@ -9,3 +9,7 @@ type Tweet struct {
 type ReceiveTweet struct {
 	Content string `validate:"required,max=140"`
 }
+
+type ResponseTweet struct {
+	Tweets *[]Tweet `json:"tweets"`
+}
