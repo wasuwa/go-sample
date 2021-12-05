@@ -45,11 +45,11 @@ func CreateTweet(c echo.Context) error {
 	if err := c.Validate(rt); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
-	t, err := services.CreateTweet(rt)
+	t, err := services.CreateTweet(rt, uint(id))
 	if err != nil {
 		return err
 	}
-	return c.JSONPretty(http.StatusCreated, t)
+	return c.JSONPretty(http.StatusCreated, t, " ")
 }
 
 func DestroyTweet(c echo.Context) error {

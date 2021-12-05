@@ -20,3 +20,20 @@ func AllTweet(id int) (*models.ResponseTweet, error) {
 	rt.Tweets = tt
 	return rt, nil
 }
+
+func CreateTweet(rt *models.ReceiveTweet, id uint) (*models.Tweet, error) {
+	db := database.DB()
+	t := bindTweet(rt, id)
+	db = db.Debug().Create(t)
+	if db.Error != nil {
+		return nil, db.Error
+	}
+	return t, nil
+}
+
+func bindTweet(rt *models.ReceiveTweet, id uint) *models.Tweet {
+	t := new(models.Tweet)
+	t.UserID = id
+	t.Content = rt.Content
+	return t
+}
