@@ -41,8 +41,7 @@ func CreateUser(ru *models.ReceiveUser) (*models.User, error) {
 		return nil, err
 	}
 	db := database.DB()
-	u := new(models.User)
-	bindUser(u, ru)
+	u := bindUser(ru)
 	db = db.Create(u)
 	if db.Error != nil {
 		return nil, db.Error
@@ -57,8 +56,7 @@ func UpdateUser(ru *models.ReceiveUser, id int) error {
 		return err
 	}
 	db := database.DB()
-	u := new(models.User)
-	bindUser(u, ru)
+	u := bindUser(ru)
 	db = db.Where("id = ?", id).Updates(u)
 	if db.Error != nil {
 		return db.Error
@@ -85,8 +83,10 @@ func hashPassword(pass string) (string, error) {
 	return string(h), err
 }
 
-func bindUser(u *models.User, ru *models.ReceiveUser) {
+func bindUser(ru *models.ReceiveUser) *models.User {
+	u := new(models.User)
 	u.Name = ru.Name
 	u.Email = ru.Email
 	u.Password = ru.Password
+	return u
 }
