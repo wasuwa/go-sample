@@ -67,8 +67,8 @@ func UpdateUser(ru *models.ReceiveUser, id int) error {
 }
 
 func DestroyUser(id int) error {
-	u := new(models.User)
 	db := database.DB()
+	u := new(models.User)
 	db = db.Delete(u, id)
 	if db.Error != nil {
 		return db.Error

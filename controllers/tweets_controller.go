@@ -53,5 +53,28 @@ func CreateTweet(c echo.Context) error {
 }
 
 func DestroyTweet(c echo.Context) error {
-	return nil
+	id, err := strconv.Atoi(c.Param("user_id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+	s, err := session.Get("session", c)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if !services.IsLoggedin(s, id) {
+		return echo.NewHTTPError(http.StatusUnauthorized, errors.New("login required").Error())
+	}
+	tid, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+	if err = services.DestroyTweet(tid); errors.Is(err, gorm.ErrRecordNotFound) {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	} else if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	if err = services.ClearSession(c, s); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusNoContent, nil)
 }

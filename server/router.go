@@ -38,7 +38,7 @@ func Router() (e *echo.Echo) {
 	// tweet
 	e.GET("/users/:user_id/tweets", controllers.IndexTweet)
 	e.POST("/users/:user_id/tweets", controllers.CreateTweet)
-	e.DELETE("/users/:user_id/tweets", controllers.DestroyTweet)
+	e.DELETE("/users/:user_id/tweets/:id", controllers.DestroyTweet)
 
 	return
 }

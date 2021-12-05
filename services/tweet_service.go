@@ -30,6 +30,17 @@ func CreateTweet(rt *models.ReceiveTweet, id uint) (*models.Tweet, error) {
 	}
 	return t, nil
 }
+func DestroyTweet(id int) error {
+	db := database.DB()
+	t := new(models.Tweet)
+	db = db.Debug().Delete(t, id)
+	if db.Error != nil {
+		return db.Error
+	} else if db.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+	return nil
+}
 
 func bindTweet(rt *models.ReceiveTweet, id uint) *models.Tweet {
 	t := new(models.Tweet)
