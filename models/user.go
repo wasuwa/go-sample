@@ -12,3 +12,7 @@ type ReceiveUser struct {
 	Email    string `validate:"required,max=256,emailType"`
 	Password string `validate:"required,min=6"`
 }
+
+type ResponseUser struct {
+	Users *[]User `json:"users"`
+}
